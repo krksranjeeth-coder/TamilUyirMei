@@ -723,9 +723,9 @@
     ctx.fillStyle = '#5F27CD';
     ctx.fillText('✨ 4. குறியீடு இணைப்பு • Watch Them Join Together! ✨', w / 2, 22);
 
-    const c1 = Math.round(w * 0.20);
-    const c2 = Math.round(w * 0.50);
-    const c3 = Math.round(w * 0.80);
+    const c1 = Math.round(w * 0.18);
+    const c2 = Math.round(w * 0.45);
+    const c3 = Math.round(w * 0.77);
     const midY = 108;
 
     // Column 1: Base letter + Flying Pulli
@@ -787,8 +787,10 @@
       ctx.fillText(connectorLabel, c2, midY + 44);
     }
 
-    // Column 3: Completed Uyirmei Letter
-    const fontSz3 = details.combined.length >= 2 ? 50 : 62;
+    // Column 3: Completed Uyirmei Letter (sized proportionally so wide compound glyphs never overlap)
+    const isTripleGlyph = uyir.id === 'au' || details.combined.length >= 3;
+    const isDoubleGlyph = details.combined.length >= 2;
+    const fontSz3 = isTripleGlyph ? 46 : (isDoubleGlyph ? 52 : 62);
     ctx.font = `900 ${fontSz3}px "Noto Sans Tamil", sans-serif`;
     ctx.fillStyle = '#10AC84';
     ctx.fillText(details.combined, c3, midY);
@@ -2009,17 +2011,23 @@
         ctx.fillStyle = '#6D28D9';
         ctx.fillText('குறியீடு இணைந்து உயிர்மெய் பிறக்கிறது!', width / 2, 120);
 
-        ctx.font = '900 75px "Noto Sans Tamil", sans-serif';
+        // Dynamic glyph sizing & positioning so compound vowels (கௌ, கொ, கோ, கை) never overwrite the arrow
+        const isTripleGlyph = uyirObj.id === 'au' || details.combined.length >= 3;
+        const isDoubleGlyph = details.combined.length >= 2;
+        const baseFontSz = 64;
+        const resFontSz = isTripleGlyph ? 50 : (isDoubleGlyph ? 60 : 74);
+
+        ctx.font = `900 ${baseFontSz}px "Noto Sans Tamil", sans-serif`;
         ctx.fillStyle = '#1E293B';
-        ctx.fillText(meiObj.base, width / 2 - 95, 225);
+        ctx.fillText(meiObj.base, 110, 225);
 
-        ctx.font = '700 32px sans-serif';
+        ctx.font = '700 28px sans-serif';
         ctx.fillStyle = '#10B981';
-        ctx.fillText('➜', width / 2, 225);
+        ctx.fillText('➜', 215, 225);
 
-        ctx.font = '900 85px "Noto Sans Tamil", sans-serif';
+        ctx.font = `900 ${resFontSz}px "Noto Sans Tamil", sans-serif`;
         ctx.fillStyle = '#059669';
-        ctx.fillText(details.combined, width / 2 + 95, 225);
+        ctx.fillText(details.combined, 360, 225);
 
         drawBottomBox();
         ctx.font = '700 13px "Noto Sans Tamil", sans-serif';
@@ -2048,7 +2056,11 @@
         ctx.font = '28px sans-serif';
         ctx.fillText('👑', width / 2, 146);
 
-        ctx.font = '900 120px "Noto Sans Tamil", sans-serif';
+        const isTripleGlyph4 = uyirObj.id === 'au' || details.combined.length >= 3;
+        const isDoubleGlyph4 = details.combined.length >= 2;
+        const finalFontSz = isTripleGlyph4 ? 92 : (isDoubleGlyph4 ? 106 : 120);
+
+        ctx.font = `900 ${finalFontSz}px "Noto Sans Tamil", sans-serif`;
         ctx.fillStyle = '#059669';
         ctx.fillText(details.combined, width / 2, 230);
 
@@ -2214,17 +2226,22 @@
         vCtx.fillStyle = '#5F27CD';
         vCtx.fillText('குறியீடு இணைந்து உயிர்மெய் பிறக்கிறது!', 360, 215);
 
-        vCtx.font = '900 120px "Noto Sans Tamil", sans-serif';
+        const isTripleGlyph = uyirObj.id === 'au' || details.combined.length >= 3;
+        const isDoubleGlyph = details.combined.length >= 2;
+        const vBaseFont = 96;
+        const vResFont = isTripleGlyph ? 76 : (isDoubleGlyph ? 90 : 115);
+
+        vCtx.font = `900 ${vBaseFont}px "Noto Sans Tamil", sans-serif`;
         vCtx.fillStyle = '#2C3A47';
-        vCtx.fillText(meiObj.base, 200, 390);
+        vCtx.fillText(meiObj.base, 160, 390);
 
-        vCtx.font = '700 48px sans-serif';
+        vCtx.font = '700 40px sans-serif';
         vCtx.fillStyle = '#059669';
-        vCtx.fillText('➔', 360, 390);
+        vCtx.fillText('➔', 315, 390);
 
-        vCtx.font = '900 135px "Noto Sans Tamil", sans-serif';
+        vCtx.font = `900 ${vResFont}px "Noto Sans Tamil", sans-serif`;
         vCtx.fillStyle = '#10AC84';
-        vCtx.fillText(details.combined, 520, 390);
+        vCtx.fillText(details.combined, 525, 390);
 
         vCtx.font = '700 17px "Noto Sans Tamil", sans-serif';
         vCtx.fillStyle = '#1E293B';
@@ -2238,7 +2255,11 @@
         vCtx.fillStyle = '#10AC84';
         vCtx.fillText('🎉 உயிர்மெய் எழுத்து உருவானது! 🎉', 360, 215);
 
-        vCtx.font = '900 200px "Noto Sans Tamil", sans-serif';
+        const isTripleGlyph3 = uyirObj.id === 'au' || details.combined.length >= 3;
+        const isDoubleGlyph3 = details.combined.length >= 2;
+        const vFinalFont = isTripleGlyph3 ? 140 : (isDoubleGlyph3 ? 165 : 195);
+
+        vCtx.font = `900 ${vFinalFont}px "Noto Sans Tamil", sans-serif`;
         vCtx.fillStyle = '#10AC84';
         vCtx.fillText(details.combined, 360, 400);
 
@@ -2805,8 +2826,11 @@
     ctx.fillStyle = '#2C3A47';
     ctx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, 300, 135);
 
-    // Big Uyirmei Letter
-    ctx.font = '900 160px "Noto Sans Tamil", sans-serif';
+    // Big Uyirmei Letter (sized proportionally for compound vowels like கௌ)
+    const isTripleGlyphCard = uyirObj.id === 'au' || details.combined.length >= 3;
+    const isDoubleGlyphCard = details.combined.length >= 2;
+    const cardFont = isTripleGlyphCard ? 118 : (isDoubleGlyphCard ? 138 : 160);
+    ctx.font = `900 ${cardFont}px "Noto Sans Tamil", sans-serif`;
     ctx.fillStyle = '#10AC84';
     ctx.fillText(details.combined, 300, 270);
 
