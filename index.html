@@ -200,6 +200,19 @@
               </button>
             </div>
           </div>
+
+          <!-- Tertiary Row: A4 PDF Downloads for Printing (Attavanai & Soothiram) -->
+          <div class="export-sub-row" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #E2E8F0;">
+            <span class="sub-label">A4 அச்சு & PDF பதிவிறக்கம் (Print & A4 PDF):</span>
+            <div class="export-actions-bar" style="display:flex; flex-wrap:wrap; gap:10px;">
+              <button id="btnMainPrintMatrix" class="btn-pdf-print" title="அனைத்து 216 எழுத்துக்கள் அட்டவணையை A4 தாளில் அச்சிட அல்லது PDF ஆகச் சேமிக்க">
+                <span>📊</span> 216 அட்டவணை A4 PDF (Chart)
+              </button>
+              <button id="btnMainPrintCheat" class="btn-pdf-print" title="12 உயிர்மெய் சூத்திரங்களை A4 தாளில் அச்சிட அல்லது PDF ஆகச் சேமிக்க">
+                <span>📖</span> 12 சூத்திரங்கள் A4 PDF (Rules)
+              </button>
+            </div>
+          </div>
         </div>
 
       </section>
@@ -288,7 +301,12 @@
     <div class="matrix-modal-content">
       <div class="modal-header">
         <h2 id="modalMatrixTitle">தமிழ் உயிர்மெய் அட்டவணை (Tamil Uyir-Mei Chart • 18 x 12 = 216 Letters)</h2>
-        <button id="btnCloseMatrixModal" class="btn-close-modal" aria-label="மூடுக (Close)">✕</button>
+        <div class="modal-header-actions">
+          <button id="btnModalMatrixPdf" class="btn-pdf-modal" title="அட்டவணையை A4 தாளில் அச்சிட அல்லது PDF ஆகப் பதிவிறக்க">
+            <span>📄</span> A4 PDF / அச்சிடுக
+          </button>
+          <button id="btnCloseMatrixModal" class="btn-close-modal" aria-label="மூடுக (Close)">✕</button>
+        </div>
       </div>
       <div style="padding:10px 24px; background:#F8FAFC; border-bottom:1px solid #E2E8F0; font-size:13px; color:#64748B;">
         💡 <strong>குழந்தைகளுக்கான வழிகாட்டி:</strong> எந்த எழுத்தைத் தொட்டாலும் அதன் மாயாஜாலச் சூத்திரம் மற்றும் எழுதும் முறை விரியும்! (Click any letter to open its magic rule and handwriting guide!)
@@ -306,7 +324,12 @@
     <div class="matrix-modal-content" style="max-width: 850px;">
       <div class="modal-header">
         <h2 id="modalCheatTitle">குழந்தைகளுக்கான 12 எளிய உயிர்மெய் சூத்திரங்கள் (12 Easy Magic Rules for Kids)</h2>
-        <button id="btnCloseCheatModal" class="btn-close-modal" aria-label="மூடுக (Close)">✕</button>
+        <div class="modal-header-actions">
+          <button id="btnModalCheatPdf" class="btn-pdf-modal" title="12 சூத்திரங்களை A4 தாளில் அச்சிட அல்லது PDF ஆகப் பதிவிறக்க">
+            <span>📄</span> A4 PDF / அச்சிடுக
+          </button>
+          <button id="btnCloseCheatModal" class="btn-close-modal" aria-label="மூடுக (Close)">✕</button>
+        </div>
       </div>
       <div style="padding:10px 24px; background:#F0FDF4; border-bottom:1px solid #DCFCE7; font-size:13px; color:#15803D;">
         🌟 <strong>6 எளிய வடிவக் குடும்பங்கள்:</strong> ஒரே வகையான அடையாளங்களை உடைய எழுத்துக்கள் ஒன்றாகக் காட்டப்பட்டுள்ளன. (6 easy shape families make remembering all 216 letters simple!)

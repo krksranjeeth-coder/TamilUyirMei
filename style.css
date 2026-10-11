@@ -1557,3 +1557,76 @@ body::after {
     font-size: 40px;
   }
 }
+
+/* ==========================================================================
+   A4 PDF & Print Styles
+   ========================================================================== */
+
+.btn-pdf-print {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  color: #FFFFFF !important;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 8px 16px;
+  font-family: var(--font-kid);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-pdf-print:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
+  background: linear-gradient(135deg, #0369A1 0%, #075985 100%);
+}
+
+.btn-pdf-modal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #0284C7;
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-family: var(--font-kid);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-pdf-modal:hover {
+  background: #0369A1;
+  transform: translateY(-1px);
+}
+
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Native Print media queries */
+@media print {
+  body::before, body::after,
+  #confettiCanvas,
+  .print-hide {
+    display: none !important;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+

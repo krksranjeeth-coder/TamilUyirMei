@@ -110,11 +110,15 @@
   const btnCloseMatrixModal = document.getElementById('btnCloseMatrixModal');
   const matrixModal = document.getElementById('matrixModal');
   const tamilMatrixTable = document.getElementById('tamilMatrixTable');
+  const btnModalMatrixPdf = document.getElementById('btnModalMatrixPdf');
+  const btnMainPrintMatrix = document.getElementById('btnMainPrintMatrix');
 
   const btnOpenCheatSheet = document.getElementById('btnOpenCheatSheet');
   const btnCloseCheatModal = document.getElementById('btnCloseCheatModal');
   const cheatSheetModal = document.getElementById('cheatSheetModal');
   const cheatSheetContent = document.getElementById('cheatSheetContent');
+  const btnModalCheatPdf = document.getElementById('btnModalCheatPdf');
+  const btnMainPrintCheat = document.getElementById('btnMainPrintCheat');
 
   const btnOpenQuiz = document.getElementById('btnOpenQuiz');
   const btnCloseQuizModal = document.getElementById('btnCloseQuizModal');
@@ -938,6 +942,18 @@
     matrixModal.addEventListener('click', (e) => {
       if (e.target === matrixModal) matrixModal.classList.remove('open');
     });
+
+    if (btnModalMatrixPdf) {
+      btnModalMatrixPdf.addEventListener('click', (e) => {
+        e.stopPropagation();
+        printMatrixA4Pdf();
+      });
+    }
+    if (btnMainPrintMatrix) {
+      btnMainPrintMatrix.addEventListener('click', () => {
+        printMatrixA4Pdf();
+      });
+    }
   }
 
   function renderMatrixTable() {
@@ -969,6 +985,258 @@
     });
   }
 
+  // Helper to open printable A4 document cleanly with zero chopping
+  function openPrintWindow(htmlContent) {
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.open();
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+    } else {
+      // Fallback for pop-up blocker: use an iframe to trigger print directly
+      let printFrame = document.getElementById('hiddenPrintFrame');
+      if (!printFrame) {
+        printFrame = document.createElement('iframe');
+        printFrame.id = 'hiddenPrintFrame';
+        printFrame.style.position = 'fixed';
+        printFrame.style.top = '-9999px';
+        printFrame.style.left = '-9999px';
+        printFrame.style.width = '0';
+        printFrame.style.height = '0';
+        printFrame.style.border = 'none';
+        document.body.appendChild(printFrame);
+      }
+      const doc = printFrame.contentWindow.document;
+      doc.open();
+      doc.write(htmlContent);
+      doc.close();
+      setTimeout(() => {
+        printFrame.contentWindow.focus();
+        printFrame.contentWindow.print();
+      }, 500);
+    }
+  }
+
+  // A4 Landscape Print / Save as PDF: 216 Uyir-Mei Letters Chart
+  function printMatrixA4Pdf() {
+    let tableRows = '';
+    // Header row
+    tableRows += `
+      <thead>
+        <tr>
+          <th style="background:#F1F5F9; color:#1E293B; width:28mm; height:28px; font-size:11.5px;">
+            மெய் \\ உயிர்
+          </th>
+    `;
+    UYIR_LETTERS.forEach(u => {
+      tableRows += `
+        <th style="background:#ECFDF5; color:#065F46; height:28px; text-align:center;">
+          <div style="font-size:15px; font-weight:900; font-family:'Noto Sans Tamil', sans-serif;">${u.uyir}</div>
+          <div style="font-size:9.5px; color:#047857; font-weight:700;">${u.sign ? `(${u.sign})` : '(-)'}</div>
+          <div style="font-size:8.5px; color:#6B7280; font-weight:600; font-family:'Outfit', sans-serif;">/${u.english}/</div>
+        </th>
+      `;
+    });
+    tableRows += `</tr></thead><tbody>`;
+
+    // 18 Mei rows
+    MEI_LETTERS.forEach((m, mIdx) => {
+      const isAlt = mIdx % 2 === 1;
+      tableRows += `
+        <tr style="height:21px; background:${isAlt ? '#F8FAFC' : '#FFFFFF'};">
+          <th style="background:#FEF2F2; color:#991B1B; font-size:12.5px; font-weight:800; text-align:center; padding:0 2px;">
+            <span>${m.mei}</span>
+            <span style="font-size:9.5px; font-weight:600; color:#B91C1C; font-family:'Outfit', sans-serif; margin-left:3px;">/${m.english}/</span>
+          </th>
+      `;
+      UYIR_LETTERS.forEach(u => {
+        const char = m.base + u.sign;
+        tableRows += `
+          <td style="text-align:center; font-size:14.5px; font-weight:800; color:#0F172A; font-family:'Noto Sans Tamil', sans-serif; padding:0;">
+            ${char}
+          </td>
+        `;
+      });
+      tableRows += `</tr>`;
+    });
+    tableRows += `</tbody>`;
+
+    const html = `<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>தமிழ் உயிர்மெய் 216 அட்டவணை (Tamil Uyir-Mei 216 Chart) • A4 PDF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 6mm 8mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Noto Sans Tamil', 'Outfit', sans-serif;
+      background: #FFFFFF;
+      color: #0F172A;
+      margin: 0;
+      padding: 0;
+    }
+    .screen-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 10px 20px;
+      font-family: 'Outfit', sans-serif;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .btn-action-print {
+      background: #10AC84;
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-action-print:hover {
+      background: #059669;
+    }
+    .btn-action-close {
+      background: #334155;
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .page-wrap {
+      width: 100%;
+      max-width: 281mm;
+      margin: 0 auto;
+      padding: 3mm 0 0 0;
+    }
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid #0F172A;
+      padding-bottom: 4px;
+      margin-bottom: 4px;
+    }
+    .doc-header h1 {
+      font-size: 15.5px;
+      font-weight: 900;
+      color: #0F172A;
+      line-height: 1.2;
+    }
+    .doc-header p {
+      font-size: 10.5px;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .brand-meta {
+      text-align: right;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #059669;
+    }
+    .matrix-tbl {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .matrix-tbl th, .matrix-tbl td {
+      border: 1px solid #CBD5E1;
+      vertical-align: middle;
+    }
+    .doc-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5px;
+      color: #64748B;
+      font-weight: 600;
+      border-top: 1px solid #E2E8F0;
+      padding-top: 3px;
+      margin-top: 4px;
+    }
+    @media print {
+      .screen-bar {
+        display: none !important;
+      }
+      .page-wrap {
+        padding: 0;
+      }
+      body {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen-bar">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="btn-action-print" onclick="window.print()">🖨️ A4 PDF ஆகச் சேமி / அச்சிடுக (Save as PDF / Print)</button>
+      <span style="font-size:12.5px; color:#94A3B8;">💡 திறக்கும் அச்சு சாளரத்தில் 'Destination'-ல் <strong>'Save as PDF'</strong> எனத் தேர்வு செய்யவும்.</span>
+    </div>
+    <button class="btn-action-close" onclick="window.close()">✕ மூடுக (Close)</button>
+  </div>
+
+  <div class="page-wrap">
+    <div class="doc-header">
+      <div>
+        <h1>தமிழ் உயிர்மெய் அட்டவணை • Tamil Uyir-Mei 216 Letters Chart</h1>
+        <p>18 மெய் எழுத்துக்கள் (Consonants) × 12 உயிர் எழுத்துக்கள் (Vowels) = 216 உயிர்மெய் எழுத்துக்கள்</p>
+      </div>
+      <div class="brand-meta">
+        <div>தமிழ் உயிர்மெய் பயிலரங்கம்</div>
+        <div style="font-size:9.5px; color:#64748B; font-weight:500;">TamilUyirMei • Free Educational Lab</div>
+      </div>
+    </div>
+
+    <table class="matrix-tbl">
+      ${tableRows}
+    </table>
+
+    <div class="doc-footer">
+      <span>🌐 TamilUyirMei: https://krksranjeeth-coder.github.io/TamilUyirMei/</span>
+      <span>💡 குழந்தைகளுக்கான எளிய வடிவம் • முழுமையான 216 தமிழ் உயிர்மெய் எழுத்துக்கள் • A4 அச்சுப் பதிப்பு</span>
+      <span>பக்கம் 1 / 1 (A4 Landscape)</span>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        window.focus();
+        window.print();
+      }, 400);
+    });
+  <\/script>
+</body>
+</html>`;
+
+    openPrintWindow(html);
+  }
+
   // 12 Cheat Sheet Modal
   function initCheatSheetModal() {
     btnOpenCheatSheet.addEventListener('click', () => {
@@ -983,6 +1251,309 @@
     cheatSheetModal.addEventListener('click', (e) => {
       if (e.target === cheatSheetModal) cheatSheetModal.classList.remove('open');
     });
+
+    if (btnModalCheatPdf) {
+      btnModalCheatPdf.addEventListener('click', (e) => {
+        e.stopPropagation();
+        printCheatSheetA4Pdf();
+      });
+    }
+    if (btnMainPrintCheat) {
+      btnMainPrintCheat.addEventListener('click', () => {
+        printCheatSheetA4Pdf();
+      });
+    }
+  }
+
+  // A4 Portrait Print / Save as PDF: 12 Magic Rules (12 சூத்திரங்கள்)
+  function printCheatSheetA4Pdf() {
+    let cardsHtml = '';
+    UYIR_LETTERS.forEach((u, idx) => {
+      const example = 'க' + u.sign;
+      const typeLabel = u.type === 'குறில்' ? 'குறில் (Short)' : 'நெடில் (Long)';
+      const isKuril = u.type === 'குறில்';
+      cardsHtml += `
+        <div class="rule-box">
+          <div class="rule-box-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="vowel-char">${u.uyir}</span>
+              <span class="vowel-sound">/${u.english}/</span>
+            </div>
+            <span class="type-pill ${isKuril ? 'kuril' : 'nedil'}">${typeLabel}</span>
+          </div>
+
+          <div class="rule-sign-row">
+            <span class="sign-label">குறியீடு (Sign):</span>
+            <span class="sign-glyph">${u.sign || '(இல்லை / None)'}</span>
+            <span class="sign-name">• ${u.signName}</span>
+            <span class="sign-pos">(${u.position})</span>
+          </div>
+
+          <div class="rule-formula-row">
+            சூத்திரம் (Formula): <strong style="color:#0F172A;">க் + ${u.uyir} = ${example}</strong>
+          </div>
+
+          <div class="rule-tamil-desc">
+            📖 <strong>விளக்கம்:</strong> ${u.formulaTamil}
+          </div>
+
+          <div class="rule-kid-english">
+            💡 <strong>Kid Rule:</strong> ${u.formulaEnglish}
+          </div>
+        </div>
+      `;
+    });
+
+    const html = `<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>தமிழ் உயிர்மெய் 12 எளிய சூத்திரங்கள் (12 Magic Rules) • A4 PDF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 6mm 8mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    body {
+      font-family: 'Noto Sans Tamil', 'Outfit', sans-serif;
+      background: #FFFFFF;
+      color: #0F172A;
+      margin: 0;
+      padding: 0;
+    }
+    .screen-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 10px 20px;
+      font-family: 'Outfit', sans-serif;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .btn-action-print {
+      background: #10AC84;
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-action-print:hover {
+      background: #059669;
+    }
+    .btn-action-close {
+      background: #334155;
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .page-wrap {
+      width: 100%;
+      max-width: 194mm;
+      margin: 0 auto;
+      padding: 3mm 0 0 0;
+    }
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid #10AC84;
+      padding-bottom: 4px;
+      margin-bottom: 5px;
+    }
+    .doc-header h1 {
+      font-size: 15px;
+      font-weight: 900;
+      color: #0F172A;
+      line-height: 1.2;
+    }
+    .doc-header p {
+      font-size: 10.5px;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .brand-meta {
+      text-align: right;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #059669;
+    }
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5mm;
+    }
+    .rule-box {
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
+      padding: 4px 7px;
+      background: #FFFFFF;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .rule-box:nth-child(even) {
+      background: #F8FAFC;
+    }
+    .rule-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #E2E8F0;
+      padding-bottom: 2px;
+      margin-bottom: 3px;
+    }
+    .vowel-char {
+      font-size: 17px;
+      font-weight: 900;
+      color: #DC2626;
+      line-height: 1;
+    }
+    .vowel-sound {
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      font-family: 'Outfit', sans-serif;
+    }
+    .type-pill {
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+    .type-pill.kuril {
+      background: #E0F2FE;
+      color: #0369A1;
+    }
+    .type-pill.nedil {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+    .rule-sign-row {
+      font-size: 10px;
+      font-weight: 700;
+      color: #065F46;
+      margin-bottom: 2px;
+    }
+    .sign-glyph {
+      font-size: 13px;
+      font-weight: 900;
+      color: #059669;
+    }
+    .sign-pos {
+      font-size: 9px;
+      color: #64748B;
+      font-weight: 600;
+    }
+    .rule-formula-row {
+      font-size: 10px;
+      font-weight: 700;
+      color: #4338CA;
+      margin-bottom: 2px;
+    }
+    .rule-tamil-desc {
+      font-size: 9.5px;
+      color: #334155;
+      line-height: 1.25;
+      margin-bottom: 2px;
+    }
+    .rule-kid-english {
+      font-size: 9px;
+      color: #0D9488;
+      font-weight: 600;
+      line-height: 1.2;
+      font-family: 'Outfit', sans-serif;
+    }
+    .doc-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5px;
+      color: #64748B;
+      font-weight: 600;
+      border-top: 1px solid #E2E8F0;
+      padding-top: 3px;
+      margin-top: 4px;
+    }
+    @media print {
+      .screen-bar {
+        display: none !important;
+      }
+      .page-wrap {
+        padding: 0;
+      }
+      body {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen-bar">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="btn-action-print" onclick="window.print()">🖨️ A4 PDF ஆகச் சேமி / அச்சிடுக (Save as PDF / Print)</button>
+      <span style="font-size:12.5px; color:#94A3B8;">💡 திறக்கும் அச்சு சாளரத்தில் 'Destination'-ல் <strong>'Save as PDF'</strong> எனத் தேர்வு செய்யவும்.</span>
+    </div>
+    <button class="btn-action-close" onclick="window.close()">✕ மூடுக (Close)</button>
+  </div>
+
+  <div class="page-wrap">
+    <div class="doc-header">
+      <div>
+        <h1>தமிழ் உயிர்மெய் 12 எளிய சூத்திரங்கள் • 12 Magic Rules for Kids</h1>
+        <p>12 உயிர் எழுத்துக்களின் குறியீடுகள் மற்றும் சேர்க்கை விதிகள் (A4 Worksheet Guide)</p>
+      </div>
+      <div class="brand-meta">
+        <div>தமிழ் உயிர்மெய் பயிலரங்கம்</div>
+        <div style="font-size:9.5px; color:#64748B; font-weight:500;">TamilUyirMei • Free Educational Lab</div>
+      </div>
+    </div>
+
+    <div class="rules-grid">
+      ${cardsHtml}
+    </div>
+
+    <div class="doc-footer">
+      <span>🌐 TamilUyirMei: https://krksranjeeth-coder.github.io/TamilUyirMei/</span>
+      <span>💡 குழந்தைகளுக்கான 12 மாயாஜாலச் சூத்திரங்கள் • 100% A4 காகித வடிவம் • No Chopping Guarantee</span>
+      <span>பக்கம் 1 / 1 (A4 Portrait)</span>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        window.focus();
+        window.print();
+      }, 400);
+    });
+  <\/script>
+</body>
+</html>`;
+
+    openPrintWindow(html);
   }
 
   function renderCheatSheet() {
