@@ -1855,8 +1855,75 @@
     if (btnCloseProgressModal) btnCloseProgressModal.addEventListener('click', closeProgressModal);
   }
 
-  // Pure function to generate binary GIF bytes for any Mei + Uyir pair (Slower, kid-friendly pace, fully wrapped)
-  function renderLetterGifBytes(meiObj, uyirObj, width = 500, height = 500) {
+  // Renders the exact web page stage view (1:1 identical to what is shown on screen in the web app)
+  function renderWebPageStageFrame(ctx, width, height, stepIndex, meiObj, uyirObj, details) {
+    ctx.clearRect(0, 0, width, height);
+
+    // 1. Clean white card background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, width, height);
+
+    // 2. Decorative subtle grid dots (identical to web page canvas)
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.03)';
+    for (let x = 20; x < width; x += 30) {
+      for (let y = 20; y < height; y += 30) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 3. Clean rounded card container border matching .animation-view-wrapper
+    ctx.strokeStyle = '#EAECEF';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(2, 2, width - 4, height - 4, 16);
+    ctx.stroke();
+
+    // 4. Exact stage badge in top-left matching #animStageBadge
+    const stageNames = [
+      'படி 1 / Step 1: மெய் • Base Consonant with Dot',
+      'படி 2 / Step 2: உயிர் • Vowel Arrives',
+      'படி 3 / Step 3: சூத்திரம் • The Magic Rule',
+      'படி 4 / Step 4: மாற்றம் • Joining Hands',
+      'படி 5 / Step 5: உயிர்மெய் • New Letter & Word!'
+    ];
+    const badgeText = stageNames[stepIndex] || `படி ${stepIndex + 1}`;
+    ctx.font = '600 12px "Outfit", "Noto Sans Tamil", sans-serif';
+    const bW = ctx.measureText(badgeText).width + 24;
+    ctx.fillStyle = 'rgba(44, 58, 71, 0.06)';
+    ctx.beginPath();
+    ctx.roundRect(14, 10, bW, 24, 12);
+    ctx.fill();
+
+    ctx.fillStyle = '#64748B';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(badgeText, 14 + bW / 2, 22);
+
+    // 5. Draw the exact stage content into the content area below the badge
+    const topBarHeight = 40;
+    const stageHeight = height - topBarHeight;
+    ctx.save();
+    ctx.translate(0, topBarHeight);
+
+    if (stepIndex === 0) {
+      drawMeiIntro(ctx, width, stageHeight, meiObj);
+    } else if (stepIndex === 1) {
+      drawMeiAndUyirMeeting(ctx, width, stageHeight, meiObj, uyirObj);
+    } else if (stepIndex === 2) {
+      drawFormulaStage(ctx, width, stageHeight, meiObj, uyirObj);
+    } else if (stepIndex === 3) {
+      drawTransformationMagic(ctx, width, stageHeight, meiObj, uyirObj);
+    } else {
+      drawCompletedUyirmei(ctx, width, stageHeight, details);
+    }
+
+    ctx.restore();
+  }
+
+  // Pure function to generate binary GIF bytes for any Mei + Uyir pair (reflects the exact web page animation view)
+  function renderLetterGifBytes(meiObj, uyirObj, width = 680, height = 430) {
     const details = getLetterDetails(meiObj, uyirObj);
 
     const canvas = document.createElement('canvas');
@@ -1867,219 +1934,17 @@
     const encoder = new SimpleGifEncoder(width, height);
     encoder.setRepeat(0); // Infinite loop
 
-    function drawCardBase(stepIndex) {
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, width, height);
+    // 5 exact web stages with child-friendly timings:
+    // Step 1 (Mei Consonant): 2200ms
+    // Step 2 (Meeting Vowel): 2200ms
+    // Step 3 (Magic Formula & Rules): 3200ms
+    // Step 4 (Joining Transformation): 2800ms
+    // Step 5 (Complete Letter & Vocabulary): 3600ms
+    const stepDelays = [2200, 2200, 3200, 2800, 3600];
 
-      // Playful border
-      ctx.strokeStyle = '#EDF2F7';
-      ctx.lineWidth = 4;
-      ctx.strokeRect(2, 2, width - 4, height - 4);
-
-      // Top Header Banner
-      ctx.fillStyle = '#FF5E57';
-      ctx.fillRect(4, 4, width - 8, 42);
-
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = '800 16px "Noto Sans Tamil", sans-serif';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillText('தமிழ் உயிர்மெய் • TamilUyirMei', width / 2, 25);
-
-      // Step Breadcrumb Beads on Top
-      const beadLabels = ['1. மெய்', '2. சூத்திரம்', '3. இணைவு', '4. சொல்'];
-      const beadW = (width - 32) / 4;
-      beadLabels.forEach((lbl, idx) => {
-        const bx = 16 + idx * beadW;
-        const isCur = idx === stepIndex;
-        ctx.fillStyle = isCur ? '#10AC84' : '#F1F5F9';
-        ctx.beginPath();
-        ctx.roundRect(bx + 2, 52, beadW - 4, 22, 6);
-        ctx.fill();
-
-        ctx.font = isCur ? '800 11px "Noto Sans Tamil", sans-serif' : '600 11px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = isCur ? '#FFFFFF' : '#64748B';
-        ctx.fillText(lbl, bx + beadW / 2, 63);
-      });
-    }
-
-    const boxX = 16;
-    const boxW = width - 32;
-    const boxY = height - 165;
-    const boxH = 122;
-    const maxTextW = boxW - 24;
-
-    function drawBottomBox() {
-      ctx.fillStyle = '#F8FAFC';
-      ctx.strokeStyle = '#E2E8F0';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.roundRect(boxX, boxY, boxW, boxH, 14);
-      ctx.fill();
-      ctx.stroke();
-    }
-
-    function drawFooter() {
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = '600 11px "Noto Sans Tamil", sans-serif';
-      ctx.fillStyle = '#94A3B8';
-      ctx.fillText('TamilUyirMei • குழந்தைகளுக்கான தமிழ் பயிலரங்கம்', width / 2, height - 16);
-    }
-
-    const totalFrames = 8;
-    for (let f = 0; f < totalFrames; f++) {
-      if (f < 2) {
-        // Frame Phase 1: Consonant standing proud with pulli (1.8 seconds)
-        drawCardBase(0);
-
-        ctx.font = '700 18px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#64748B';
-        ctx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, width / 2, 94);
-
-        ctx.font = '700 14px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#334155';
-        ctx.fillText(`மெய் எழுத்து: ${meiObj.name} (/${meiObj.english}/)`, width / 2, 120);
-
-        ctx.font = '900 110px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#FF5E57';
-        ctx.fillText(meiObj.mei, width / 2, 225);
-
-        ctx.font = '26px sans-serif';
-        ctx.fillText('✨', width / 2 + 65, 160);
-        ctx.fillText('⭐', width / 2 - 65, 165);
-
-        drawBottomBox();
-        ctx.font = '700 15px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#1E293B';
-        drawWrappedCenteredBlock(ctx, 'தலையில் புள்ளி (்) கொண்ட மெய் எழுத்து', width / 2, boxY + 36, maxTextW, 22);
-
-        ctx.font = '600 13px "Outfit", sans-serif';
-        ctx.fillStyle = '#64748B';
-        drawWrappedCenteredBlock(ctx, 'Base consonant letter with a dot on its head!', width / 2, boxY + 76, maxTextW, 18);
-
-        drawFooter();
-        encoder.addFrame(ctx, 1800);
-
-      } else if (f < 4) {
-        // Frame Phase 2: Formula & Pulli takeoff (1.8 seconds)
-        drawCardBase(1);
-
-        ctx.font = '700 18px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#64748B';
-        ctx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, width / 2, 94);
-
-        ctx.font = '700 15px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#B45309';
-        ctx.fillText(`சூத்திரம்: ${uyirObj.signName}`, width / 2, 120);
-
-        ctx.font = '900 100px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#1E293B';
-        ctx.fillText(meiObj.base, width / 2, 228);
-
-        // Rising pulli dot
-        const lift = (f - 2) * 22;
-        ctx.fillStyle = '#FF5E57';
-        ctx.beginPath();
-        ctx.arc(width / 2 + 10, 150 - lift, 7.5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.font = '22px sans-serif';
-        ctx.fillText('💫', width / 2 + 36, 140 - lift);
-
-        drawBottomBox();
-        ctx.font = '700 14px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#854D0E';
-        drawWrappedCenteredBlock(ctx, uyirObj.formulaTamil, width / 2, boxY + 32, maxTextW, 20);
-
-        ctx.font = '600 12px "Outfit", sans-serif';
-        ctx.fillStyle = '#92400E';
-        drawWrappedCenteredBlock(ctx, uyirObj.formulaEnglish, width / 2, boxY + 84, maxTextW, 17);
-
-        drawFooter();
-        encoder.addFrame(ctx, 1800);
-
-      } else if (f < 6) {
-        // Frame Phase 3: Transformation & Joining (2.0 seconds)
-        drawCardBase(2);
-
-        ctx.font = '700 18px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#64748B';
-        ctx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, width / 2, 94);
-
-        ctx.font = '700 15px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#6D28D9';
-        ctx.fillText('குறியீடு இணைந்து உயிர்மெய் பிறக்கிறது!', width / 2, 120);
-
-        // Dynamic glyph sizing & positioning so compound vowels (கௌ, கொ, கோ, கை) never overwrite the arrow
-        const isTripleGlyph = uyirObj.id === 'au' || details.combined.length >= 3;
-        const isDoubleGlyph = details.combined.length >= 2;
-        const baseFontSz = 64;
-        const resFontSz = isTripleGlyph ? 50 : (isDoubleGlyph ? 60 : 74);
-
-        ctx.font = `900 ${baseFontSz}px "Noto Sans Tamil", sans-serif`;
-        ctx.fillStyle = '#1E293B';
-        ctx.fillText(meiObj.base, 110, 225);
-
-        ctx.font = '700 28px sans-serif';
-        ctx.fillStyle = '#10B981';
-        ctx.fillText('➜', 215, 225);
-
-        ctx.font = `900 ${resFontSz}px "Noto Sans Tamil", sans-serif`;
-        ctx.fillStyle = '#059669';
-        ctx.fillText(details.combined, 360, 225);
-
-        drawBottomBox();
-        ctx.font = '700 13px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#1E293B';
-        drawWrappedCenteredBlock(ctx, `எழுதும் முறை: ${details.steps.map((s, i) => `${i + 1}. ${s.part}`).join(' ➔ ')}`, width / 2, boxY + 34, maxTextW, 20);
-
-        ctx.font = '600 12px "Outfit", sans-serif';
-        ctx.fillStyle = '#059669';
-        drawWrappedCenteredBlock(ctx, `Watch the symbol join to form ${details.combined}!`, width / 2, boxY + 84, maxTextW, 17);
-
-        drawFooter();
-        encoder.addFrame(ctx, 2000);
-
-      } else {
-        // Frame Phase 4: Completed Uyirmei Letter + Vocabulary (2.8 seconds)
-        drawCardBase(3);
-
-        ctx.font = '700 18px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#64748B';
-        ctx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, width / 2, 94);
-
-        ctx.font = '700 15px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#059669';
-        ctx.fillText('🎉 உயிர்மெய் எழுத்து உருவானது! 🎉', width / 2, 120);
-
-        ctx.font = '28px sans-serif';
-        ctx.fillText('👑', width / 2, 146);
-
-        const isTripleGlyph4 = uyirObj.id === 'au' || details.combined.length >= 3;
-        const isDoubleGlyph4 = details.combined.length >= 2;
-        const finalFontSz = isTripleGlyph4 ? 92 : (isDoubleGlyph4 ? 106 : 120);
-
-        ctx.font = `900 ${finalFontSz}px "Noto Sans Tamil", sans-serif`;
-        ctx.fillStyle = '#059669';
-        ctx.fillText(details.combined, width / 2, 230);
-
-        drawBottomBox();
-        ctx.font = '800 16px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#1E293B';
-        ctx.fillText(`${details.vocab.emoji} ${details.vocab.word} (${details.vocab.english})`, width / 2, boxY + 28);
-
-        ctx.font = '600 13px "Noto Sans Tamil", sans-serif';
-        ctx.fillStyle = '#475569';
-        drawWrappedCenteredBlock(ctx, details.vocab.sentence, width / 2, boxY + 58, maxTextW, 19);
-
-        ctx.font = '500 12px "Outfit", sans-serif';
-        ctx.fillStyle = '#059669';
-        drawWrappedCenteredBlock(ctx, details.vocab.sentenceEnglish || details.vocab.english, width / 2, boxY + 94, maxTextW, 17);
-
-        drawFooter();
-        encoder.addFrame(ctx, 2800);
-      }
+    for (let s = 0; s < 5; s++) {
+      renderWebPageStageFrame(ctx, width, height, s, meiObj, uyirObj, details);
+      encoder.addFrame(ctx, stepDelays[s]);
     }
 
     return encoder.render();
@@ -2101,10 +1966,12 @@
     progressBarInner.style.width = '10%';
     progressPercent.textContent = '10%';
 
-    // Canvas 720 x 720
+    // Canvas 720 x 460 (Matching web player aspect ratio & layout)
+    const vWidth = 720;
+    const vHeight = 460;
     const vCanvas = document.createElement('canvas');
-    vCanvas.width = 720;
-    vCanvas.height = 720;
+    vCanvas.width = vWidth;
+    vCanvas.height = vHeight;
     const vCtx = vCanvas.getContext('2d');
 
     const canvasStream = vCanvas.captureStream(30); // 30 FPS
@@ -2126,174 +1993,19 @@
 
     recorder.start(100);
 
-    const totalDurationMs = 10000;
+    const totalDurationMs = 13500;
     const startTime = performance.now();
 
     function drawVideoFrame(elapsedMs) {
       const sec = elapsedMs / 1000;
-      let chapter = 0;
-      if (sec >= 7.2) chapter = 3;
-      else if (sec >= 4.8) chapter = 2;
-      else if (sec >= 2.4) chapter = 1;
-      else chapter = 0;
+      let stepIdx = 0;
+      if (sec >= 10.0) stepIdx = 4;
+      else if (sec >= 7.4) stepIdx = 3;
+      else if (sec >= 4.4) stepIdx = 2;
+      else if (sec >= 2.2) stepIdx = 1;
+      else stepIdx = 0;
 
-      // Background
-      vCtx.fillStyle = '#FFFFFF';
-      vCtx.fillRect(0, 0, 720, 720);
-
-      vCtx.strokeStyle = '#E2E8F0';
-      vCtx.lineWidth = 10;
-      vCtx.strokeRect(5, 5, 710, 710);
-
-      // Header Banner
-      vCtx.fillStyle = '#10AC84';
-      vCtx.fillRect(10, 10, 700, 70);
-
-      vCtx.textAlign = 'center';
-      vCtx.textBaseline = 'middle';
-      vCtx.font = '800 24px "Noto Sans Tamil", sans-serif';
-      vCtx.fillStyle = '#FFFFFF';
-      vCtx.fillText('தமிழ் உயிர்மெய் • TamilUyirMei காணொளி', 360, 45);
-
-      // Chapter Beads
-      const chaptersInfo = ['1. மெய்', '2. சூத்திரம்', '3. இணைவு', '4. சொல்'];
-      const cWidth = 660 / 4;
-      chaptersInfo.forEach((title, idx) => {
-        const x = 30 + idx * cWidth;
-        const isActive = idx === chapter;
-        vCtx.fillStyle = isActive ? '#059669' : '#EDF2F7';
-        vCtx.beginPath();
-        vCtx.roundRect(x + 4, 92, cWidth - 8, 34, 10);
-        vCtx.fill();
-
-        vCtx.font = isActive ? '800 15px "Noto Sans Tamil", sans-serif' : '600 14px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = isActive ? '#FFFFFF' : '#718096';
-        vCtx.fillText(title, x + (cWidth / 2), 109);
-      });
-
-      // Top equation
-      vCtx.font = '800 28px "Noto Sans Tamil", sans-serif';
-      vCtx.fillStyle = '#2C3A47';
-      vCtx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, 360, 160);
-
-      if (chapter === 0) {
-        vCtx.font = '700 20px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#FF5E57';
-        vCtx.fillText(`மெய் எழுத்து: ${meiObj.name} (${meiObj.soundHint})`, 360, 215);
-
-        vCtx.font = '900 180px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#FF5E57';
-        vCtx.fillText(meiObj.mei, 360, 390);
-
-        vCtx.font = '36px sans-serif';
-        vCtx.fillText('✨', 470, 280);
-
-        vCtx.font = '600 19px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#4A5568';
-        drawWrappedCenteredBlock(vCtx, 'தலையில் புள்ளி கொண்ட மெய் எழுத்து!', 360, 555, 620, 24);
-        vCtx.font = '500 16px "Outfit", sans-serif';
-        vCtx.fillStyle = '#718096';
-        drawWrappedCenteredBlock(vCtx, `Consonant with dot on top: /${meiObj.english}/`, 360, 592, 620, 20);
-
-      } else if (chapter === 1) {
-        vCtx.font = '800 22px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#B7791F';
-        vCtx.fillText(`மாயாஜாலச் சூத்திரம்: ${uyirObj.signName}`, 360, 215);
-
-        vCtx.font = '900 160px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#2C3A47';
-        vCtx.fillText(meiObj.base, 360, 400);
-
-        const tInChapter = (sec - 2.4) / 2.4;
-        const lift = Math.min(80, tInChapter * 90);
-        vCtx.fillStyle = '#FF5E57';
-        vCtx.beginPath();
-        vCtx.arc(375, 270 - lift, 11, 0, Math.PI * 2);
-        vCtx.fill();
-
-        vCtx.font = '32px sans-serif';
-        vCtx.fillText('💫', 420, 255 - lift);
-
-        vCtx.font = '700 18px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#854D0E';
-        drawWrappedCenteredBlock(vCtx, uyirObj.formulaTamil, 360, 545, 620, 24);
-        vCtx.font = '500 15px "Outfit", sans-serif';
-        vCtx.fillStyle = '#92400E';
-        drawWrappedCenteredBlock(vCtx, uyirObj.formulaEnglish, 360, 588, 620, 20);
-
-      } else if (chapter === 2) {
-        vCtx.font = '800 22px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#5F27CD';
-        vCtx.fillText('குறியீடு இணைந்து உயிர்மெய் பிறக்கிறது!', 360, 215);
-
-        const isTripleGlyph = uyirObj.id === 'au' || details.combined.length >= 3;
-        const isDoubleGlyph = details.combined.length >= 2;
-        const vBaseFont = 96;
-        const vResFont = isTripleGlyph ? 76 : (isDoubleGlyph ? 90 : 115);
-
-        vCtx.font = `900 ${vBaseFont}px "Noto Sans Tamil", sans-serif`;
-        vCtx.fillStyle = '#2C3A47';
-        vCtx.fillText(meiObj.base, 160, 390);
-
-        vCtx.font = '700 40px sans-serif';
-        vCtx.fillStyle = '#059669';
-        vCtx.fillText('➔', 315, 390);
-
-        vCtx.font = `900 ${vResFont}px "Noto Sans Tamil", sans-serif`;
-        vCtx.fillStyle = '#10AC84';
-        vCtx.fillText(details.combined, 525, 390);
-
-        vCtx.font = '700 17px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#1E293B';
-        drawWrappedCenteredBlock(vCtx, `எழுதும் முறை: ${details.steps.map((s, i) => `${i + 1}. ${s.part}`).join('  ➔  ')}`, 360, 550, 620, 24);
-        vCtx.font = '500 15px "Outfit", sans-serif';
-        vCtx.fillStyle = '#64748B';
-        drawWrappedCenteredBlock(vCtx, 'Trace each part step-by-step', 360, 590, 620, 20);
-
-      } else {
-        vCtx.font = '800 24px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#10AC84';
-        vCtx.fillText('🎉 உயிர்மெய் எழுத்து உருவானது! 🎉', 360, 215);
-
-        const isTripleGlyph3 = uyirObj.id === 'au' || details.combined.length >= 3;
-        const isDoubleGlyph3 = details.combined.length >= 2;
-        const vFinalFont = isTripleGlyph3 ? 140 : (isDoubleGlyph3 ? 165 : 195);
-
-        vCtx.font = `900 ${vFinalFont}px "Noto Sans Tamil", sans-serif`;
-        vCtx.fillStyle = '#10AC84';
-        vCtx.fillText(details.combined, 360, 400);
-
-        vCtx.font = '40px sans-serif';
-        vCtx.fillText('👑', 360, 255);
-
-        vCtx.font = '800 24px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#2C3A47';
-        vCtx.fillText(`${details.vocab.emoji} ${details.vocab.word} (${details.vocab.english})`, 360, 538);
-
-        vCtx.font = '600 16px "Noto Sans Tamil", sans-serif';
-        vCtx.fillStyle = '#4A5568';
-        drawWrappedCenteredBlock(vCtx, details.vocab.sentence, 360, 570, 620, 22);
-
-        vCtx.font = '500 14px "Outfit", sans-serif';
-        vCtx.fillStyle = '#059669';
-        drawWrappedCenteredBlock(vCtx, details.vocab.sentenceEnglish || details.vocab.english, 360, 602, 620, 20);
-      }
-
-      // Bottom Pause & Learn Banner
-      vCtx.fillStyle = '#F8FAFC';
-      vCtx.strokeStyle = '#E2E8F0';
-      vCtx.lineWidth = 1.5;
-      vCtx.beginPath();
-      vCtx.roundRect(40, 635, 640, 60, 14);
-      vCtx.fill();
-      vCtx.stroke();
-
-      vCtx.font = '700 15px "Noto Sans Tamil", sans-serif';
-      vCtx.fillStyle = '#10AC84';
-      vCtx.fillText('💡 எப்போது வேண்டுமானாலும் நிறுத்தி (Pause) பழகலாம் ⏸️', 360, 658);
-      vCtx.font = '600 12px "Noto Sans Tamil", sans-serif';
-      vCtx.fillStyle = '#64748B';
-      vCtx.fillText('TamilUyirMei • குழந்தைகளுக்கான தமிழ் பயிலரங்கம்', 360, 678);
+      renderWebPageStageFrame(vCtx, vWidth, vHeight, stepIdx, meiObj, uyirObj, details);
     }
 
     return new Promise((resolve) => {
@@ -2574,7 +2286,7 @@
     progressPercent.textContent = '60% (அனிமேஷன் உருவாக்கம்)...';
     await new Promise(r => setTimeout(r, 40));
 
-    const gifBytes = renderLetterGifBytes(meiObj, uyirObj, 500, 500);
+    const gifBytes = renderLetterGifBytes(meiObj, uyirObj);
     const gifBlob = new Blob([gifBytes], { type: 'image/gif' });
 
     progressBarInner.style.width = '100%';
@@ -2639,7 +2351,7 @@
     for (let i = 0; i < UYIR_LETTERS.length; i++) {
       const uyirObj = UYIR_LETTERS[i];
       const details = getLetterDetails(meiObj, uyirObj);
-      const gifBytes = renderLetterGifBytes(meiObj, uyirObj, 480, 480);
+      const gifBytes = renderLetterGifBytes(meiObj, uyirObj);
 
       // Folder structure: [mei]/[uyirmei].gif
       const filePath = `${meiObj.mei}/${details.combined}.gif`;
@@ -2722,7 +2434,7 @@
       for (let u = 0; u < UYIR_LETTERS.length; u++) {
         const uObj = UYIR_LETTERS[u];
         const details = getLetterDetails(mObj, uObj);
-        const gifBytes = renderLetterGifBytes(mObj, uObj, 450, 450);
+        const gifBytes = renderLetterGifBytes(mObj, uObj);
 
         // Folder structure of mei, naming convention representing actual uyirmei alphabet:
         // E.g. க்/க.gif, க்/கா.gif ... ன்/னௌ.gif
