@@ -614,14 +614,14 @@ body::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  min-height: 280px;
+  padding: 42px 16px 20px;
+  min-height: 350px;
   overflow: hidden;
 }
 
 .canvas-badge {
   position: absolute;
-  top: 14px;
+  top: 12px;
   left: 14px;
   background: rgba(44, 58, 71, 0.06);
   padding: 4px 12px;
@@ -629,6 +629,7 @@ body::after {
   font-size: 12px;
   font-weight: 600;
   color: var(--text-muted);
+  z-index: 2;
 }
 
 #animationCanvas {
