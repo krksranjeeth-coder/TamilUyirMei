@@ -5,7 +5,120 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>தமிழ் உயிர்மெய் பயிலரங்கம் | TamilUyirMei Lab</title>
   <meta name="description" content="TamilUyirMei - குழந்தைகள் எளிய சூத்திரங்கள், அனிமேஷன் மற்றும் எழுதும் வரிசையுடன் தமிழ் உயிர்மெய் எழுத்துக்களைக் கற்றுக்கொள்ள உதவும் பயிலரங்கம்.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2.2">
+  <style>
+    /* Direct fallback styling for export tool buttons to prevent browser cache lag */
+    .export-buttons-grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+      gap: 12px !important;
+      width: 100% !important;
+    }
+    .export-buttons-grid.printable-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+    }
+    .export-tool-btn {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      padding: 12px 16px !important;
+      border-radius: 14px !important;
+      border: 1.5px solid transparent !important;
+      font-family: 'Outfit', 'Noto Sans Tamil', -apple-system, sans-serif !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      text-decoration: none !important;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+      box-sizing: border-box !important;
+    }
+    .export-tool-btn:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16) !important;
+    }
+    .export-tool-btn .btn-icon {
+      font-size: 26px !important;
+      line-height: 1 !important;
+      flex-shrink: 0 !important;
+    }
+    .export-tool-btn .btn-text-wrap {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+      min-width: 0 !important;
+    }
+    .export-tool-btn .btn-text-wrap strong {
+      font-size: 13.5px !important;
+      font-weight: 800 !important;
+      line-height: 1.25 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .export-tool-btn .btn-text-wrap small {
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      line-height: 1.2 !important;
+      opacity: 0.92 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .export-tool-btn.btn-mp4 {
+      background: linear-gradient(135deg, #10AC84, #059669) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(16, 172, 132, 0.35) !important;
+    }
+    .export-tool-btn.btn-gif {
+      background: linear-gradient(135deg, #FF5E57, #E04038) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(255, 94, 87, 0.35) !important;
+    }
+    .export-tool-btn.btn-flashcard {
+      background: linear-gradient(135deg, #FF9F43, #EE5253) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(255, 159, 67, 0.35) !important;
+    }
+    .export-tool-btn.btn-fourstep {
+      background: linear-gradient(135deg, #3B82F6, #1D4ED8) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35) !important;
+    }
+    .export-tool-btn.btn-batch-gif {
+      background: linear-gradient(135deg, #0ABDE3, #10AC84) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(10, 189, 227, 0.35) !important;
+    }
+    .export-tool-btn.btn-batch-all-gif {
+      background: linear-gradient(135deg, #5F27CD, #341F97) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(95, 39, 205, 0.35) !important;
+    }
+    .export-tool-btn.btn-batch-card {
+      background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35) !important;
+    }
+    .export-tool-btn.btn-batch-all-card {
+      background: linear-gradient(135deg, #EC4899, #BE185D) !important;
+      color: white !important;
+      box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35) !important;
+    }
+    .export-tool-btn.btn-pdf {
+      background: #F8FAFC !important;
+      color: #1E293B !important;
+      border: 1.5px solid #CBD5E1 !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+    }
+    .export-tool-btn.btn-pdf:hover {
+      background: #FFFFFF !important;
+      border-color: #94A3B8 !important;
+      color: #0F172A !important;
+    }
+    .export-tool-btn.btn-pdf .btn-text-wrap small {
+      color: #64748B !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -166,62 +279,103 @@
         </div>
 
         <!-- Learning Media & Download Actions Section -->
-        <div class="learning-export-container">
+        <div class="learning-export-container" style="display:flex; flex-direction:column; gap:16px;">
           <div class="export-header-row">
             <h4><span>🎬</span> கற்றல் மற்றும் பதிவிறக்கக் கருவிகள் (Learning & Download Tools for Kids):</h4>
             <span class="export-hint-badge">நிறுத்திப் பழகலாம் (Pause & Learn anytime)</span>
           </div>
 
-          <!-- Primary Media Row: Video (Pause & Learn), 4-Step Card, and Slow GIF -->
-          <div class="export-actions-bar primary-bar">
-            <button id="btnDownloadMp4" class="btn-video-mp4" title="குழந்தைகள் எப்போது வேண்டுமானாலும் நிறுத்திப் படிக்கக்கூடிய MP4 வீடியோ (Pause & Learn Video)">
-              <span>▶️</span> <span id="btnDownloadMp4Text">கா.mp4 • Video (Pause & Learn)</span>
-            </button>
-            <button id="btnDownloadCard" class="btn-card-png" title="4 படிகள் கொண்ட விரிவான கற்றல் அட்டைப் படம் (4-Step Learning Card)">
-              <span>🖼️</span> <span id="btnDownloadCardText">4-படி கற்றல் அட்டை (PNG Card)</span>
-            </button>
-            <button id="btnDownloadGif" class="btn-download-gif" title="குழந்தைகள் எளிதில் வாசிக்கக்கூடிய நிதான வேக அனிமேஷன் GIF (Looping Animated GIF)">
-              <span>🎥</span> <span id="btnDownloadGifText">கா.gif • Animated GIF</span>
-            </button>
-          </div>
-
-          <!-- Secondary Row: Batch Downloads (GIF & Flashcards) -->
-          <div class="export-sub-row">
-            <span class="sub-label">🎥 அனிமேஷன் GIF மொத்தத் தொகுப்புகள் (GIF Batch Downloads):</span>
-            <div class="export-actions-bar batch-bar">
-              <button id="btnDownloadMeiZip" class="btn-download-mei-zip" title="தற்போது தேர்ந்தெடுக்கப்பட்ட மெய் வரிசையின் 12 உயிர்மெய் எழுத்துக்களையும் GIF ZIP ஆக பதிவிறக்க">
-                <span>📁</span> <span id="btnDownloadMeiZipText">க் வரிசை (12 GIF ZIP)</span>
+          <!-- Section 1: Single Letter Exports (Video, 4-Step Card, Flashcard, GIF) -->
+          <div class="export-grid-section">
+            <span class="sub-label">🎯 தற்போதைய எழுத்துப் பதிவிறக்கம் (Single Letter Downloads):</span>
+            <div class="export-buttons-grid">
+              <button id="btnDownloadMp4" class="export-tool-btn btn-mp4" title="குழந்தைகள் எப்போது வேண்டுமானாலும் நிறுத்திப் படிக்கக்கூடிய MP4 வீடியோ" onclick="window.downloadLetterVideo ? window.downloadLetterVideo() : (window.TamilUyirMei && window.TamilUyirMei.downloadLetterVideo())">
+                <span class="btn-icon">▶️</span>
+                <span class="btn-text-wrap">
+                  <strong id="btnDownloadMp4Text">கா.mp4 • Video</strong>
+                  <small>நிறுத்திப் பழகும் காணொளி (Pause & Learn)</small>
+                </span>
               </button>
-              <button id="btnDownloadAllZip" class="btn-download-all-zip" title="அனைத்து 18 மெய் எழுத்துக்களின் 216 உயிர்மெய் எழுத்துக்களையும் GIF ZIP ஆக பதிவிறக்க">
-                <span>📦</span> <span>அனைத்து 216 GIF-கள் (All 216 GIF ZIP)</span>
+              <button id="btnDownloadGif" class="export-tool-btn btn-gif" title="குழந்தைகள் எளிதில் வாசிக்கக்கூடிய நிதான வேக அனிமேஷன் GIF" onclick="window.downloadSingleLetterGif ? window.downloadSingleLetterGif() : (window.TamilUyirMei && window.TamilUyirMei.downloadSingleLetterGif())">
+                <span class="btn-icon">🎥</span>
+                <span class="btn-text-wrap">
+                  <strong id="btnDownloadGifText">கா.gif • Animated GIF</strong>
+                  <small>அனிமேஷன் சுழற்சி (Looping GIF)</small>
+                </span>
               </button>
-            </div>
-          </div>
-
-          <div class="export-sub-row" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #E2E8F0;">
-            <span class="sub-label">🎴 அட்டைப் படங்கள் மொத்தத் தொகுப்புகள் (Flashcard Batch Downloads):</span>
-            <div class="export-actions-bar batch-bar">
-              <button id="btnDownloadPng" class="btn-download-png" title="தற்போதைய எழுத்தின் அட்டைப் படம் (Single Flashcard PNG)">
-                <span>🎴</span> <span id="btnDownloadPngText">கா அட்டை (Flashcard PNG)</span>
+              <button id="btnDownloadPng" class="export-tool-btn btn-flashcard" title="செங்குத்து அட்டைப் படம் (Flashcard PNG)" onclick="window.downloadFlashcardPng ? window.downloadFlashcardPng() : (window.TamilUyirMei && window.TamilUyirMei.downloadFlashcardPng())">
+                <span class="btn-icon">🎴</span>
+                <span class="btn-text-wrap">
+                  <strong id="btnDownloadPngText">கா அட்டை • Flashcard</strong>
+                  <small>கற்றல் அட்டை (Printable PNG)</small>
+                </span>
               </button>
-              <button id="btnDownloadMeiCardsZip" class="btn-download-cards-zip" title="தற்போது தேர்ந்தெடுக்கப்பட்ட மெய் வரிசையின் 12 அட்டைப் படங்களையும் ZIP ஆக பதிவிறக்க">
-                <span>🗂️</span> <span id="btnDownloadMeiCardsZipText">க் வரிசை (12 அட்டைகள் ZIP)</span>
-              </button>
-              <button id="btnDownloadAllCardsZip" class="btn-download-all-cards-zip" title="அனைத்து 18 மெய் எழுத்துக்களின் 216 அட்டைப் படங்களையும் 18 கோப்புறைகளுடன் ZIP ஆக பதிவிறக்க">
-                <span>🎁</span> <span>அனைத்து 216 அட்டைகள் (All 216 Flashcards ZIP)</span>
+              <button id="btnDownloadCard" class="export-tool-btn btn-fourstep" title="4 படிகள் கொண்ட விரிவான கற்றல் அட்டைப் படம்" onclick="window.downloadFourStepCardPng ? window.downloadFourStepCardPng() : (window.TamilUyirMei && window.TamilUyirMei.downloadFourStepCardPng())">
+                <span class="btn-icon">🖼️</span>
+                <span class="btn-text-wrap">
+                  <strong id="btnDownloadCardText">4-படி அட்டை • 4-Step Card</strong>
+                  <small>சூத்திர வழிகாட்டி (Cheat Sheet)</small>
+                </span>
               </button>
             </div>
           </div>
 
-          <!-- Tertiary Row: A4 PDF Downloads for Printing (Attavanai & Soothiram) -->
-          <div class="export-sub-row" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #E2E8F0;">
-            <span class="sub-label">A4 அச்சு & PDF பதிவிறக்கம் (Print & A4 PDF):</span>
-            <div class="export-actions-bar" style="display:flex; flex-wrap:wrap; gap:10px;">
-              <button id="btnMainPrintMatrix" class="btn-pdf-print" title="அனைத்து 216 எழுத்துக்கள் அட்டவணையை A4 தாளில் அச்சிட அல்லது PDF ஆகச் சேமிக்க">
-                <span>📊</span> 216 அட்டவணை A4 PDF (Chart)
+          <!-- Section 2: Batch Collections (Mei Series & All 216) -->
+          <div class="export-grid-section" style="border-top:1px dashed #E2E8F0; padding-top:12px;">
+            <span class="sub-label">📦 மொத்தத் தொகுப்புகள் (Batch Collections ZIP):</span>
+            <div class="export-buttons-grid">
+              <!-- 12-Letter GIF ZIP -->
+              <button id="btnDownloadMeiZip" class="export-tool-btn btn-batch-gif" title="மெய் வரிசையின் 12 உயிர்மெய் GIF அனிமேஷன்களை ZIP ஆக பதிவிறக்க" onclick="window.downloadMeiSeriesZip ? window.downloadMeiSeriesZip() : (window.TamilUyirMei && window.TamilUyirMei.downloadMeiSeriesZip())">
+                <span class="btn-icon">📁</span>
+                <span class="btn-text-wrap">
+                  <strong id="btnDownloadMeiZipText">க் வரிசை (12 GIF ZIP)</strong>
+                  <small>வரிசை அனிமேஷன் கோப்புகள்</small>
+                </span>
               </button>
-              <button id="btnMainPrintCheat" class="btn-pdf-print" title="12 உயிர்மெய் சூத்திரங்களை A4 தாளில் அச்சிட அல்லது PDF ஆகச் சேமிக்க">
-                <span>📖</span> 12 சூத்திரங்கள் A4 PDF (Rules)
+              <!-- All 216 GIF ZIP -->
+              <button id="btnDownloadAllZip" class="export-tool-btn btn-batch-all-gif" title="அனைத்து 216 உயிர்மெய் எழுத்துக்களின் GIF-களையும் 18 கோப்புறைகளுடன் ZIP ஆக பதிவிறக்க" onclick="window.downloadAll216UyirmeiZip ? window.downloadAll216UyirmeiZip() : (window.TamilUyirMei && window.TamilUyirMei.downloadAll216UyirmeiZip())">
+                <span class="btn-icon">📦</span>
+                <span class="btn-text-wrap">
+                  <strong>அனைத்து 216 GIF-கள்</strong>
+                  <small>18 கோப்புறைகள் (All 216 GIF ZIP)</small>
+                </span>
+              </button>
+              <!-- 12-Letter Flashcard ZIP -->
+              <button id="btnDownloadMeiCardsZip" class="export-tool-btn btn-batch-card" title="மெய் வரிசையின் 12 அட்டைப் படங்களை (Flashcards) ZIP ஆக பதிவிறக்க" onclick="window.downloadMeiCardsZip ? window.downloadMeiCardsZip() : (window.TamilUyirMei && window.TamilUyirMei.downloadMeiCardsZip())">
+                <span class="btn-icon">🗂️</span>
+                <span class="btn-text-wrap">
+                  <strong id="btnDownloadMeiCardsZipText">க் வரிசை (12 அட்டைகள் ZIP)</strong>
+                  <small>வரிசை Flashcard கோப்புகள்</small>
+                </span>
+              </button>
+              <!-- All 216 Flashcards ZIP -->
+              <button id="btnDownloadAllCardsZip" class="export-tool-btn btn-batch-all-card" title="அனைத்து 216 எழுத்துக்களின் Flashcard அட்டைப் படங்களையும் 18 கோப்புறைகளுடன் ZIP ஆக பதிவிறக்க" onclick="window.downloadAll216CardsZip ? window.downloadAll216CardsZip() : (window.TamilUyirMei && window.TamilUyirMei.downloadAll216CardsZip())">
+                <span class="btn-icon">🎁</span>
+                <span class="btn-text-wrap">
+                  <strong>அனைத்து 216 அட்டைகள்</strong>
+                  <small>18 கோப்புறைகள் (All 216 Flashcards ZIP)</small>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Section 3: A4 Printable PDF -->
+          <div class="export-grid-section" style="border-top:1px dashed #E2E8F0; padding-top:12px;">
+            <span class="sub-label">🖨️ A4 அச்சு & PDF பதிவிறக்கம் (Print & A4 PDF):</span>
+            <div class="export-buttons-grid printable-grid">
+              <button id="btnMainPrintMatrix" class="export-tool-btn btn-pdf" title="அனைத்து 216 எழுத்துக்கள் அட்டவணையை A4 தாளில் அச்சிட அல்லது PDF ஆகச் சேமிக்க">
+                <span class="btn-icon">📊</span>
+                <span class="btn-text-wrap">
+                  <strong>216 அட்டவணை A4 PDF</strong>
+                  <small>முழு எழுத்துக்கள் அச்சு வடிவம் (Print Chart)</small>
+                </span>
+              </button>
+              <button id="btnMainPrintCheat" class="export-tool-btn btn-pdf" title="12 உயிர்மெய் சூத்திரங்களை A4 தாளில் அச்சிட அல்லது PDF ஆகச் சேமிக்க">
+                <span class="btn-icon">📖</span>
+                <span class="btn-text-wrap">
+                  <strong>12 சூத்திரங்கள் A4 PDF</strong>
+                  <small>மாயாஜால விதிகள் அச்சு வடிவம் (Rules Cheat Sheet)</small>
+                </span>
               </button>
             </div>
           </div>
@@ -425,6 +579,6 @@
   <script src="gif-encoder.js"></script>
   <script src="zip-packer.js"></script>
   <script src="tamil-data.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=2.2"></script>
 </body>
 </html>

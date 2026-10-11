@@ -2881,6 +2881,16 @@
     getLetterDetails
   };
 
+  // Direct window bindings so onclick attributes can always call them directly
+  window.downloadLetterVideo = downloadLetterVideo;
+  window.downloadSingleLetterGif = downloadSingleLetterGif;
+  window.downloadFlashcardPng = downloadFlashcardPng;
+  window.downloadFourStepCardPng = downloadFourStepCardPng;
+  window.downloadMeiSeriesZip = downloadMeiSeriesZip;
+  window.downloadAll216UyirmeiZip = downloadAll216UyirmeiZip;
+  window.downloadMeiCardsZip = downloadMeiCardsZip;
+  window.downloadAll216CardsZip = downloadAll216CardsZip;
+
   // Start on load
   window.addEventListener('DOMContentLoaded', init);
 })();

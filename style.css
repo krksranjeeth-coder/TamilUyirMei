@@ -850,54 +850,147 @@ body::after {
   flex-wrap: wrap;
 }
 
-.btn-video-mp4 {
-  flex: 1.4;
-  min-width: 240px;
+/* Modern Export Grid System */
+.export-grid-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.export-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.export-buttons-grid.printable-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.export-tool-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 13px 18px;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid transparent;
+  font-family: var(--font-kid);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.export-tool-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+}
+
+.export-tool-btn:active {
+  transform: translateY(0);
+}
+
+.export-tool-btn .btn-icon {
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.export-tool-btn .btn-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.export-tool-btn .btn-text-wrap strong {
+  font-size: 13.5px;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.export-tool-btn .btn-text-wrap small {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  opacity: 0.92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Individual Card Themes */
+.export-tool-btn.btn-mp4, .btn-video-mp4 {
   background: linear-gradient(135deg, #10AC84, #059669);
   color: white;
-  border-radius: var(--radius-md);
-  border: none;
-  font-family: var(--font-kid);
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(16, 172, 132, 0.35);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 18px rgba(16, 172, 132, 0.35);
 }
 
-.btn-video-mp4:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(16, 172, 132, 0.45);
+.export-tool-btn.btn-gif, .btn-download-gif {
+  background: linear-gradient(135deg, #FF5E57, #E04038);
+  color: white;
+  box-shadow: 0 6px 18px rgba(255, 94, 87, 0.35);
 }
 
-.btn-card-png {
-  flex: 1;
-  min-width: 190px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 13px 16px;
+.export-tool-btn.btn-flashcard, .btn-download-png {
+  background: linear-gradient(135deg, #FF9F43, #EE5253);
+  color: white;
+  box-shadow: 0 6px 18px rgba(255, 159, 67, 0.35);
+}
+
+.export-tool-btn.btn-fourstep, .btn-card-png {
   background: linear-gradient(135deg, #3B82F6, #1D4ED8);
   color: white;
-  border-radius: var(--radius-md);
-  border: none;
-  font-family: var(--font-kid);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.3);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35);
 }
 
-.btn-card-png:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.4);
+.export-tool-btn.btn-batch-gif, .btn-download-mei-zip {
+  background: linear-gradient(135deg, #0ABDE3, #10AC84);
+  color: white;
+  box-shadow: 0 6px 18px rgba(10, 189, 227, 0.35);
+}
+
+.export-tool-btn.btn-batch-all-gif, .btn-download-all-zip {
+  background: linear-gradient(135deg, #5F27CD, #341F97);
+  color: white;
+  box-shadow: 0 6px 18px rgba(95, 39, 205, 0.35);
+}
+
+.export-tool-btn.btn-batch-card, .btn-download-cards-zip {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: white;
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+}
+
+.export-tool-btn.btn-batch-all-card, .btn-download-all-cards-zip {
+  background: linear-gradient(135deg, #EC4899, #BE185D);
+  color: white;
+  box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35);
+}
+
+.export-tool-btn.btn-pdf, .btn-pdf-print {
+  background: #F8FAFC;
+  color: #1E293B;
+  border: 1.5px solid #CBD5E1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.export-tool-btn.btn-pdf:hover, .btn-pdf-print:hover {
+  background: #FFFFFF;
+  border-color: #94A3B8;
+  color: #0F172A;
+}
+
+.export-tool-btn.btn-pdf .btn-text-wrap small, .btn-pdf-print small {
+  color: #64748B;
 }
 
 .export-sub-row {
@@ -909,148 +1002,9 @@ body::after {
 }
 
 .sub-label {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  color: #64748B;
-}
-
-.btn-download-gif {
-  flex: 1;
-  min-width: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #FF5E57, #FF3F34);
-  color: white;
-  border-radius: var(--radius-md);
-  border: none;
-  font-family: var(--font-kid);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(255, 94, 87, 0.35);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-download-gif:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(255, 94, 87, 0.45);
-}
-
-.btn-download-mei-zip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 18px;
-  background: linear-gradient(135deg, #0ABDE3, #10AC84);
-  color: white;
-  border-radius: var(--radius-md);
-  border: none;
-  font-family: var(--font-kid);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(16, 172, 132, 0.3);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-download-mei-zip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(16, 172, 132, 0.4);
-}
-
-.btn-download-all-zip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, #5F27CD, #341F97);
-  color: white;
-  border-radius: var(--radius-md);
-  border: none;
-  font-family: var(--font-kid);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(95, 39, 205, 0.35);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-download-all-zip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(95, 39, 205, 0.45);
-}
-
-.btn-download-png {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 16px;
-  background: white;
-  color: var(--text-main);
-  border: 1.5px solid #CBD5E0;
-  border-radius: var(--radius-md);
-  font-family: var(--font-kid);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-download-png:hover {
-  background: #F8F9FA;
-  border-color: #A0AEC0;
-}
-
-.btn-download-cards-zip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 18px;
-  background: linear-gradient(135deg, #FF9F43, #EE5253);
-  color: white;
-  border-radius: var(--radius-md);
-  border: none;
-  font-family: var(--font-kid);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(238, 82, 83, 0.3);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-download-cards-zip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(238, 82, 83, 0.45);
-}
-
-.btn-download-all-cards-zip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, #10AC84, #059669);
-  color: white;
-  border-radius: var(--radius-md);
-  border: none;
-  font-family: var(--font-kid);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(16, 172, 132, 0.35);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-download-all-cards-zip:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(16, 172, 132, 0.45);
+  color: #475569;
 }
 
 /* Right Column: Writing Guide & Practice Pad */
