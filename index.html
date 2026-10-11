@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>தமிழ் உயிர்மெய் பயிலரங்கம் | TamilUyirMei Lab</title>
+  <meta name="description" content="TamilUyirMei - குழந்தைகள் எளிய சூத்திரங்கள், அனிமேஷன் மற்றும் எழுதும் வரிசையுடன் தமிழ் உயிர்மெய் எழுத்துக்களைக் கற்றுக்கொள்ள உதவும் பயிலரங்கம்.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Confetti Canvas for Celebrations -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app-container">
+
+    <!-- Top Header Navigation -->
+    <header class="app-header" role="banner">
+      <div class="brand-section">
+        <div class="brand-logo" id="brandLogo" aria-label="தமிழ் உயிர்மெய் லோகோ">உ</div>
+        <div class="brand-titles">
+          <h1 id="mainHeading">தமிழ் உயிர்மெய் பயிலரங்கம்</h1>
+          <div class="english-sub">TamilUyirMei • Animated Tamil Learning Lab</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btnOpenMatrix" class="btn-pill btn-cheat" title="அனைத்து 216 எழுத்துக்கள் அட்டவணை (216 Letters Chart)">
+          <span>📊</span> அட்டவணை (216 Chart)
+        </button>
+        <button id="btnOpenCheatSheet" class="btn-pill btn-cheat" title="12 உயிர் சூத்திரங்கள் (12 Magic Rules)">
+          <span>📖</span> 12 சூத்திரங்கள் (12 Rules)
+        </button>
+        <button id="btnOpenQuiz" class="btn-pill btn-quiz" title="கண்டுபிடி விளையாட்டு (Find the Letter Game)">
+          <span>🎮</span> விளையாட்டு (Game)
+        </button>
+      </div>
+    </header>
+
+    <!-- Kid Banner -->
+    <section class="kid-banner" aria-label="அறிமுகம்">
+      <div class="banner-content">
+        <h2>மெய் + உயிர் = உயிர்மெய்! எப்படி உருவானது தெரியுமா?</h2>
+        <p><strong>How do Tamil letters make friends?</strong> Pick a consonant (with a dot) and a vowel below. Watch them join hands to create a brand-new Tamil letter in magic step-by-step animation!</p>
+      </div>
+    </section>
+
+    <!-- Selection Controls: Consonants (மெய் எழுத்துக்கள்) -->
+    <section class="selection-card" aria-labelledby="meiHeading">
+      <div class="selector-header">
+        <div class="selector-title">
+          <span id="meiHeading">1. மெய் எழுத்தைத் தேர்வு செய்க • Step 1: Pick a Consonant (18 Letters with a Dot):</span>
+          <span class="badge" id="selectedMeiBadge">க் (Ik / k)</span>
+        </div>
+        <div class="group-filters" role="group" aria-label="மெய் எழுத்து வகை">
+          <button class="filter-btn active" data-filter="all" id="filterAll">அனைத்தும் (All 18)</button>
+          <button class="filter-btn" data-filter="vallinam" id="filterVallinam">வல்லினம் (Strong Sounds)</button>
+          <button class="filter-btn" data-filter="mellinam" id="filterMellinam">மெல்லினம் (Soft Nasal Sounds)</button>
+          <button class="filter-btn" data-filter="idaiyinam" id="filterIdaiyinam">இடையினம் (Middle Sounds)</button>
+        </div>
+      </div>
+
+      <div class="letters-strip" id="meiStrip" role="region" aria-label="மெய் எழுத்துக்கள் பட்டியல்">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Selection Controls: 6 Approach Families (6 எளிய வடிவக் குழுக்கள்) -->
+    <section class="selection-card" aria-labelledby="uyirHeading">
+      <div class="selector-header">
+        <div class="selector-title">
+          <span id="uyirHeading">2. உயிர் எழுத்தைத் தேர்வு செய்க • Step 2: Pick a Vowel — 6 Easy Shape Families:</span>
+          <span class="badge" id="selectedUyirBadge">ஆ (Right Leg (ா))</span>
+        </div>
+        <p class="selector-sub" style="font-size:13px; color:var(--text-light); margin-top:4px;">Letters that share the same shape changes are grouped together so kids can remember them easily!</p>
+      </div>
+
+      <div class="approach-clusters-grid" id="approachClustersGrid" role="region" aria-label="6 வடிவக் குழுக்கள்">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Main Workspace (Animation Hero & Practice Studio) -->
+    <main class="main-stage-grid">
+
+      <!-- Left Column: Animation Arena & Formula Engine -->
+      <section class="hero-stage-card" aria-label="அனிமேஷன் களம்">
+        
+        <!-- Big Math Formula Equation -->
+        <div class="math-equation-bar" id="mathEquationBar">
+          <div class="equation-box mei-box" id="eqMeiBox">
+            <span class="label">மெய் (Consonant with Dot)</span>
+            <span class="main-glyph" id="eqMeiGlyph">க்</span>
+          </div>
+
+          <span class="equation-symbol">+</span>
+
+          <div class="equation-box uyir-box" id="eqUyirBox">
+            <span class="label">உயிர் (Vowel Sound)</span>
+            <span class="main-glyph" id="eqUyirGlyph">ஆ</span>
+          </div>
+
+          <span class="equation-symbol">=</span>
+
+          <div class="equation-box result-box" id="eqResultBox">
+            <span class="label">உயிர்மெய் (New Letter!)</span>
+            <span class="main-glyph" id="eqResultGlyph">கா</span>
+          </div>
+        </div>
+
+        <!-- Animation Canvas Stage -->
+        <div class="animation-view-wrapper" id="animViewWrapper">
+          <span class="canvas-badge" id="animStageBadge">படி 1 / Step 1: தொடக்கம்</span>
+          <canvas id="animationCanvas" width="680" height="320" aria-label="எழுத்து மாற்ற அனிமேஷன்"></canvas>
+        </div>
+
+        <!-- Playback & Speed Controls -->
+        <div class="animation-controls">
+          <div class="playback-buttons">
+            <button id="btnPrevStep" class="ctrl-btn" title="முந்தைய படி (Previous Step)">⏮️</button>
+            <button id="btnPlay" class="ctrl-btn play-btn" title="இயக்கு / நிறுத்து (Play / Pause)">▶️</button>
+            <button id="btnNextStep" class="ctrl-btn" title="அடுத்த படி (Next Step)">⏭️</button>
+            <button id="btnReplay" class="ctrl-btn" title="மீண்டும் தொடங்கு (Restart)">🔄</button>
+          </div>
+
+          <!-- Step Progression Nodes -->
+          <div class="step-indicator-bar" id="stepIndicatorBar">
+            <div class="step-node active" data-step="0">
+              <div class="step-pill"></div>
+              <span class="step-label">1. மெய் (Consonant)</span>
+            </div>
+            <div class="step-node" data-step="1">
+              <div class="step-pill"></div>
+              <span class="step-label">2. உயிர் (Vowel)</span>
+            </div>
+            <div class="step-node" data-step="2">
+              <div class="step-pill"></div>
+              <span class="step-label">3. சூத்திரம் (Rule)</span>
+            </div>
+            <div class="step-node" data-step="3">
+              <div class="step-pill"></div>
+              <span class="step-label">4. மாற்றம் (Join)</span>
+            </div>
+            <div class="step-node" data-step="4">
+              <div class="step-pill"></div>
+              <span class="step-label">5. சொல் (Word)</span>
+            </div>
+          </div>
+
+          <div class="speed-control">
+            <span>வேகம் (Speed):</span>
+            <button class="speed-btn" data-speed="0.5" id="speedSlow">மெதுவாய் (Slow)</button>
+            <button class="speed-btn active" data-speed="1.0" id="speedNormal">சாதாரணம் (Normal)</button>
+            <button class="speed-btn" data-speed="1.5" id="speedFast">வேகமாய் (Fast)</button>
+          </div>
+        </div>
+
+        <!-- Kid Formula Explanation Card -->
+        <div class="formula-explain-card" id="formulaCard">
+          <div class="formula-icon">🪄</div>
+          <div class="formula-texts">
+            <h3 id="formulaTitle">எளிய மாயாஜாலச் சூத்திரம் (Easy Magic Formula):</h3>
+            <p class="tamil-rule" id="formulaTamilText">புள்ளி நீங்கும் + எழுத்தின் வலதுபுறம் துணைக்கால் (ா) கை கோர்த்து வரும்!</p>
+            <p class="english-rule" id="formulaEnglishText">Pulli vanishes + a side-leg (Thunaikkaal ா) joins on the right side!</p>
+          </div>
+        </div>
+
+        <!-- Learning Media & Download Actions Section -->
+        <div class="learning-export-container">
+          <div class="export-header-row">
+            <h4><span>🎬</span> கற்றல் மற்றும் பதிவிறக்கக் கருவிகள் (Learning & Download Tools for Kids):</h4>
+            <span class="export-hint-badge">நிறுத்திப் பழகலாம் (Pause & Learn anytime)</span>
+          </div>
+
+          <!-- Primary Media Row: Video (Pause & Learn), 4-Step Card, and Slow GIF -->
+          <div class="export-actions-bar primary-bar">
+            <button id="btnDownloadMp4" class="btn-video-mp4" title="குழந்தைகள் எப்போது வேண்டுமானாலும் நிறுத்திப் படிக்கக்கூடிய MP4 வீடியோ (Pause & Learn Video)">
+              <span>▶️</span> <span id="btnDownloadMp4Text">கா.mp4 • Video (Pause & Learn)</span>
+            </button>
+            <button id="btnDownloadCard" class="btn-card-png" title="4 படிகள் கொண்ட விரிவான கற்றல் அட்டைப் படம் (4-Step Learning Card)">
+              <span>🖼️</span> <span id="btnDownloadCardText">4-படி கற்றல் அட்டை (PNG Card)</span>
+            </button>
+            <button id="btnDownloadGif" class="btn-download-gif" title="குழந்தைகள் எளிதில் வாசிக்கக்கூடிய நிதான வேக அனிமேஷன் GIF (Looping Animated GIF)">
+              <span>🎥</span> <span id="btnDownloadGifText">கா.gif • Animated GIF</span>
+            </button>
+          </div>
+
+          <!-- Secondary Row: Batch Mei ZIP, All 216 ZIP, and Flashcard PNG -->
+          <div class="export-sub-row">
+            <span class="sub-label">மொத்தத் தொகுப்புகள் (Batch Downloads):</span>
+            <div class="export-actions-bar batch-bar">
+              <button id="btnDownloadMeiZip" class="btn-download-mei-zip" title="தற்போது தேர்ந்தெடுக்கப்பட்ட மெய் வரிசையின் 12 உயிர்மெய் எழுத்துக்களையும் ZIP ஆக பதிவிறக்க">
+                <span>📁</span> <span id="btnDownloadMeiZipText">க் வரிசை (12-Letter ZIP)</span>
+              </button>
+              <button id="btnDownloadAllZip" class="btn-download-all-zip" title="அனைத்து 18 மெய் எழுத்துக்களின் 216 உயிர்மெய் எழுத்துக்களையும் கோப்புறைகளுடன் ZIP ஆக பதிவிறக்க">
+                <span>📦</span> <span>அனைத்து 216 எழுத்துக்கள் (All 216 ZIP)</span>
+              </button>
+              <button id="btnDownloadPng" class="btn-download-png" title="செங்குத்து அட்டைப் படம் (Flashcard PNG)">
+                <span>🎴</span> அட்டை (Flashcard PNG)
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Stroke Writing Order, Tracing Canvas & Vocabulary -->
+      <section class="sidebar-panel" aria-label="பயிற்சி மற்றும் எழுதும் முறை">
+
+        <!-- Stroke Order Guide Card -->
+        <div class="stroke-guide-card" id="strokeGuideCard">
+          <div class="card-heading">
+            <h2><span>✍️</span> எழுதும் முறை வரிசை (How to Write • Step-by-Step):</h2>
+            <span class="badge" id="strokePositionBadge">வலதுபுறம் சேரும்</span>
+          </div>
+
+          <div class="stroke-steps-list" id="strokeStepsList">
+            <!-- Dynamic steps injected by JS -->
+          </div>
+        </div>
+
+        <!-- Interactive Practice Pad / Tracing Canvas -->
+        <div class="practice-pad-card" id="practicePadCard">
+          <div class="card-heading">
+            <h2><span>🎨</span> எழுதிப் பழகுங்கள் (Practice Pad • Trace & Write):</h2>
+            <button id="btnToggleGuide" class="pad-btn" title="கோடுகளை மாற்று (Toggle Ruled Lines)">கோடுகள் (Ruled Lines)</button>
+          </div>
+
+          <div class="pad-toolbar">
+            <div class="color-palette" id="colorPalette">
+              <div class="color-dot active" data-color="#FF5E57" style="background:#FF5E57" title="சிவப்பு (Red)"></div>
+              <div class="color-dot" data-color="#FF9F43" style="background:#FF9F43" title="ஆரஞ்சு (Orange)"></div>
+              <div class="color-dot" data-color="#10AC84" style="background:#10AC84" title="பச்சை (Green)"></div>
+              <div class="color-dot" data-color="#54A0FF" style="background:#54A0FF" title="நீலம் (Blue)"></div>
+              <div class="color-dot" data-color="#5F27CD" style="background:#5F27CD" title="ஊதா (Purple)"></div>
+              <div class="color-dot" data-color="#2C3A47" style="background:#2C3A47" title="கருப்பு (Black)"></div>
+            </div>
+
+            <div class="pad-actions">
+              <button id="btnUndoDraw" class="pad-btn" title="முந்தைய செயல் (Undo)">↩️ பின்செய் (Undo)</button>
+              <button id="btnClearDraw" class="pad-btn" title="அழி (Clear)">🗑️ அழி (Clear)</button>
+            </div>
+          </div>
+
+          <div class="practice-canvas-container" id="practiceContainer">
+            <!-- Ruled Notebook lines guide -->
+            <div class="ruled-lines-guide" id="ruledLinesGuide">
+              <div class="ruled-line"></div>
+              <div class="ruled-line base"></div>
+              <div class="ruled-line"></div>
+            </div>
+
+            <!-- Ghost letter guide for tracing -->
+            <div class="ghost-letter-guide" id="ghostLetter">கா</div>
+
+            <canvas id="practiceCanvas"></canvas>
+          </div>
+
+          <div class="practice-footer">
+            <span style="font-size:12px; color:var(--text-light);">விரல் அல்லது மவுஸால் அழகாய் எழுதிப் பாருங்கள்! (Trace using your finger or mouse!)</span>
+            <button id="btnDonePractice" class="btn-done-practice">
+              <span>⭐</span> நான் எழுதி முடித்தேன்! (I'm Done Writing!)
+            </button>
+          </div>
+        </div>
+
+        <!-- Example Word & Vocabulary Flashcard -->
+        <div class="vocab-card" id="vocabCard">
+          <div class="vocab-emoji-box" id="vocabEmoji">🐦‍⬛</div>
+          <div class="vocab-details">
+            <div class="vocab-word-row">
+              <span class="vocab-word" id="vocabWord">காக்கை</span>
+              <span class="vocab-english" id="vocabEnglish">Crow (Kākkaɪ)</span>
+            </div>
+            <p class="vocab-sentence" id="vocabSentence">காக்கை கரையும் காக்காய்.</p>
+            <p class="vocab-sentence-english" id="vocabSentenceEnglish" style="font-size:13px; color:#5F27CD; margin:4px 0 0 0; font-family:'Outfit', sans-serif; font-weight:600;">The crow caws loudly up in the sky.</p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- 18 x 12 Full Matrix Modal -->
+  <div class="matrix-modal" id="matrixModal" role="dialog" aria-modal="true" aria-labelledby="modalMatrixTitle">
+    <div class="matrix-modal-content">
+      <div class="modal-header">
+        <h2 id="modalMatrixTitle">தமிழ் உயிர்மெய் அட்டவணை (Tamil Uyir-Mei Chart • 18 x 12 = 216 Letters)</h2>
+        <button id="btnCloseMatrixModal" class="btn-close-modal" aria-label="மூடுக (Close)">✕</button>
+      </div>
+      <div style="padding:10px 24px; background:#F8FAFC; border-bottom:1px solid #E2E8F0; font-size:13px; color:#64748B;">
+        💡 <strong>குழந்தைகளுக்கான வழிகாட்டி:</strong> எந்த எழுத்தைத் தொட்டாலும் அதன் மாயாஜாலச் சூத்திரம் மற்றும் எழுதும் முறை விரியும்! (Click any letter to open its magic rule and handwriting guide!)
+      </div>
+      <div class="matrix-scroll-area">
+        <table class="tamil-matrix-table" id="tamilMatrixTable">
+          <!-- Dynamically generated 18x12 table -->
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12 Formulas Cheat-Sheet Modal -->
+  <div class="matrix-modal" id="cheatSheetModal" role="dialog" aria-modal="true" aria-labelledby="modalCheatTitle">
+    <div class="matrix-modal-content" style="max-width: 850px;">
+      <div class="modal-header">
+        <h2 id="modalCheatTitle">குழந்தைகளுக்கான 12 எளிய உயிர்மெய் சூத்திரங்கள் (12 Easy Magic Rules for Kids)</h2>
+        <button id="btnCloseCheatModal" class="btn-close-modal" aria-label="மூடுக (Close)">✕</button>
+      </div>
+      <div style="padding:10px 24px; background:#F0FDF4; border-bottom:1px solid #DCFCE7; font-size:13px; color:#15803D;">
+        🌟 <strong>6 எளிய வடிவக் குடும்பங்கள்:</strong> ஒரே வகையான அடையாளங்களை உடைய எழுத்துக்கள் ஒன்றாகக் காட்டப்பட்டுள்ளன. (6 easy shape families make remembering all 216 letters simple!)
+      </div>
+      <div class="matrix-scroll-area" id="cheatSheetContent">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Quiz Game Modal -->
+  <div class="matrix-modal" id="quizModal" role="dialog" aria-modal="true" aria-labelledby="modalQuizTitle">
+    <div class="matrix-modal-content" style="max-width: 650px;">
+      <div class="modal-header">
+        <h2 id="modalQuizTitle">🎮 உயிர்மெய் கண்டுபிடி விளையாட்டு (Find the Combined Letter Game!)</h2>
+        <button id="btnCloseQuizModal" class="btn-close-modal" aria-label="மூடுக (Close)">✕</button>
+      </div>
+      <div class="matrix-scroll-area" style="text-align: center; padding: 30px;">
+        <div style="font-size: 18px; margin-bottom: 8px; color: var(--text-muted);">
+          நட்சத்திரங்கள் (Stars): <span id="quizScoreStars" style="color:#FFD32A; font-weight:bold; font-size:22px;">⭐ 0</span>
+        </div>
+        <div style="background:#F8FAFC; border-radius:20px; padding:24px; margin-bottom:24px; border:2px dashed #CBD5E0;">
+          <div style="font-size:16px; color:var(--text-light); margin-bottom:6px;">இந்தக் கூட்டலுக்கு எந்த உயிர்மெய் வரும்? (Which letter do these two make together?)</div>
+          <div id="quizQuestionFormula" style="font-family:var(--font-tamil); font-size:48px; font-weight:800; color:var(--primary);">
+            த் + இ = ?
+          </div>
+        </div>
+        <div id="quizOptionsGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+          <!-- 4 option buttons -->
+        </div>
+        <div id="quizFeedbackMessage" style="font-size:18px; font-weight:700; min-height:28px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GIF Generation Progress Modal -->
+  <div class="progress-modal" id="progressModal" role="dialog" aria-modal="true" aria-labelledby="progressTitle">
+    <div class="progress-card">
+      <div class="progress-icon" id="progressIcon">🎬</div>
+      <h3 id="progressTitle">அனிமேஷன் GIF தயாராகிறது...</h3>
+      <p id="progressSub">குழந்தைகளுக்கான வண்ணமயமான GIF கோப்பு உருவாக்கப்படுகிறது. சில நொடிகள் காத்திருக்கவும்!</p>
+      <div class="progress-bar-outer" id="progressBarOuter">
+        <div class="progress-bar-inner" id="progressBarInner"></div>
+      </div>
+      <span id="progressPercent" style="font-weight:700; color:var(--primary); font-size:16px;">0%</span>
+
+      <!-- Success download action card (shown after compilation) -->
+      <div class="progress-success-box" id="progressSuccessBox" style="display:none; margin-top:16px; flex-direction:column; align-items:center; gap:12px;">
+        <div id="progressPreviewContainer" style="margin:6px 0;"></div>
+        <p id="progressSuccessMsg" style="font-weight:700; color:#059669; font-size:15px; margin:0; font-family:var(--font-tamil); text-align:center;"></p>
+        
+        <div style="display:flex; flex-direction:column; gap:10px; align-items:center; width:100%; max-width:440px;">
+          <!-- Primary Save Button using File System Access API -->
+          <button id="btnSaveWithPicker" class="btn-direct-download" style="border:none; cursor:pointer; width:100%; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:13px 24px; border-radius:30px; font-weight:700; background:#10AC84; color:white; font-size:16px; box-shadow:0 6px 18px rgba(16,172,132,0.35); transition:all 0.2s;">
+            <span>💾</span> <span id="btnDirectDownloadText">கணினியில் சேமிக்க (Save File As...)</span>
+          </button>
+
+          <!-- Fallback direct download link -->
+          <div style="display:flex; gap:10px; width:100%; justify-content:center;">
+            <a id="btnDirectDownloadLink" href="#" download="" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:20px; font-weight:600; background:#F1F5F9; color:#475569; font-size:13px; border:1px solid #CBD5E1;">
+              <span>📥</span> நேரடிப் பதிவிறக்கம் (Direct Link)
+            </a>
+            <button id="btnCloseProgressModal" class="btn-close-progress" style="padding:9px 18px; border-radius:20px; font-weight:600; background:#EDF2F7; border:none; cursor:pointer; color:#4A5568; font-size:13px;">
+              முடிந்தது (Close)
+            </button>
+          </div>
+
+          <!-- Helpful Advice Banner for Mac / Windows file:// users -->
+          <div style="background:#FEF3C7; border:1px solid #FDE68A; border-radius:12px; padding:10px 14px; text-align:left; font-size:12px; color:#92400E; line-height:1.45; width:100%;">
+            <strong>💡 Mac / Windows கணினியில் கோப்பு திறக்கவில்லையா?</strong><br>
+            1. மேலே உள்ள <strong>'💾 கணினியில் சேமிக்க'</strong> பொத்தானை அழுத்தினால் கோப்பு சரியான பெயருடன் (.gif / .mp4) சேமிக்கப்படும்.<br>
+            2. பதிவிறக்கிய கோப்பு பெயர் இல்லாமல் வந்தால் (UUID), அதன் இறுதியில் <strong>.gif</strong> அல்லது <strong>.mp4</strong> என பெயர் மாற்றவும் (Rename).<br>
+            3. அல்லது TamilUyirMei கோப்புறையில் உள்ள <strong>start.command</strong>-ஐ கிளிக் செய்து இயக்கினால் எப்போதும் சரியாகப் பதிவிறங்கும்!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="gif-encoder.js"></script>
+  <script src="zip-packer.js"></script>
+  <script src="tamil-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
