@@ -34,9 +34,11 @@ An interactive, animated educational web application designed for Tamil school c
    - **🎬 MP4 Video (Pause & Learn)**: Step-by-step video lessons kids can pause, scrub, and replay.
    - **🖼️ 4-Step Learning Card (PNG)**: Visual infographic showing Consonant ➔ Vowel Rule ➔ Stroke Order ➔ Word & Sentence.
    - **🎥 Animated GIF (450x450)**: High-quality animated mini-lesson for any of the 216 combinations.
-   - **📁 12-Letter Mei Series ZIP**: Downloads all 12 combinations for a consonant in an organized folder.
-   - **📦 Complete 216 Letters ZIP**: Complete offline archive organized into 18 consonant folders.
-   - **📇 Flashcard PNG**: High-resolution printable flashcards for offline practice.
+   - **📁 12-Letter Mei Series GIF ZIP**: Downloads all 12 GIF combinations for a consonant in an organized folder.
+   - **📦 Complete 216 Letters GIF ZIP**: Complete offline animated GIF archive organized into 18 consonant folders.
+   - **📇 Flashcard PNG**: High-resolution printable flashcard for any letter.
+   - **🗂️ 12-Card Flashcard ZIP**: Downloads all 12 flashcards for the selected series in an organized folder.
+   - **🎁 Complete 216 Flashcards ZIP**: Complete archive of all 216 flashcards organized into 18 consonant folders (`க்/` through `ன்/`).
 
 5. **216-Letter Matrix & 12 Rules Cheat Sheet**:
    - Interactive 18 Mei x 12 Uyir table. Click any cell to jump to it instantly.

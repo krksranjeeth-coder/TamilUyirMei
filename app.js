@@ -90,6 +90,10 @@
   const btnDownloadMeiZipText = document.getElementById('btnDownloadMeiZipText');
   const btnDownloadAllZip = document.getElementById('btnDownloadAllZip');
   const btnDownloadPng = document.getElementById('btnDownloadPng');
+  const btnDownloadPngText = document.getElementById('btnDownloadPngText');
+  const btnDownloadMeiCardsZip = document.getElementById('btnDownloadMeiCardsZip');
+  const btnDownloadMeiCardsZipText = document.getElementById('btnDownloadMeiCardsZipText');
+  const btnDownloadAllCardsZip = document.getElementById('btnDownloadAllCardsZip');
 
   const progressModal = document.getElementById('progressModal');
   const progressIcon = document.getElementById('progressIcon');
@@ -297,7 +301,13 @@
       btnDownloadGifText.textContent = `${details.combined}.gif • Animated GIF`;
     }
     if (btnDownloadMeiZipText) {
-      btnDownloadMeiZipText.textContent = `${meiObj.mei} வரிசை • 12 Letters (ZIP)`;
+      btnDownloadMeiZipText.textContent = `${meiObj.mei} வரிசை (12 GIF ZIP)`;
+    }
+    if (btnDownloadPngText) {
+      btnDownloadPngText.textContent = `${details.combined} அட்டை (Flashcard PNG)`;
+    }
+    if (btnDownloadMeiCardsZipText) {
+      btnDownloadMeiCardsZipText.textContent = `${meiObj.mei} வரிசை (12 அட்டைகள் ZIP)`;
     }
 
     // Reset Animation Step
@@ -1852,6 +1862,8 @@
     if (btnDownloadMeiZip) btnDownloadMeiZip.addEventListener('click', downloadMeiSeriesZip);
     if (btnDownloadAllZip) btnDownloadAllZip.addEventListener('click', downloadAll216UyirmeiZip);
     if (btnDownloadPng) btnDownloadPng.addEventListener('click', downloadFlashcardPng);
+    if (btnDownloadMeiCardsZip) btnDownloadMeiCardsZip.addEventListener('click', downloadMeiCardsZip);
+    if (btnDownloadAllCardsZip) btnDownloadAllCardsZip.addEventListener('click', downloadAll216CardsZip);
     if (btnCloseProgressModal) btnCloseProgressModal.addEventListener('click', closeProgressModal);
   }
 
@@ -2501,42 +2513,40 @@
     triggerConfetti();
   }
 
-  // Download Flashcard PNG
-  async function downloadFlashcardPng() {
-    const meiObj = MEI_LETTERS[selectedMeiIndex];
-    const uyirObj = UYIR_LETTERS[selectedUyirIndex];
+  // Pure function to generate a Flashcard Canvas for any Mei + Uyir pair
+  function renderFlashcardCanvas(meiObj, uyirObj, width = 600, height = 700) {
     const details = getLetterDetails(meiObj, uyirObj);
 
     const card = document.createElement('canvas');
-    card.width = 600;
-    card.height = 700;
+    card.width = width;
+    card.height = height;
     const ctx = card.getContext('2d');
 
     // Background
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, 600, 700);
+    ctx.fillRect(0, 0, width, height);
 
     // Decorative gradient header
-    const grad = ctx.createLinearGradient(0, 0, 600, 0);
+    const grad = ctx.createLinearGradient(0, 0, width, 0);
     grad.addColorStop(0, '#FF5E57');
     grad.addColorStop(1, '#FF9F43');
     ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 600, 90);
+    ctx.fillRect(0, 0, width, 90);
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.font = '800 24px "Noto Sans Tamil", sans-serif';
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillText('தமிழ் உயிர்மெய் பயிலரங்கம் • உயிர்மெய் அட்டை', 300, 36);
+    ctx.fillText('தமிழ் உயிர்மெய் பயிலரங்கம் • உயிர்மெய் அட்டை', width / 2, 36);
 
     ctx.font = '600 15px "Outfit", sans-serif';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.fillText('TamilUyirMei • Flashcard', 300, 65);
+    ctx.fillText('TamilUyirMei • Flashcard', width / 2, 65);
 
     // Equation
     ctx.font = '700 26px "Noto Sans Tamil", sans-serif';
     ctx.fillStyle = '#2C3A47';
-    ctx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, 300, 135);
+    ctx.fillText(`${meiObj.mei} + ${uyirObj.uyir} = ${details.combined}`, width / 2, 135);
 
     // Big Uyirmei Letter (sized proportionally for compound vowels like கௌ)
     const isTripleGlyphCard = uyirObj.id === 'au' || details.combined.length >= 3;
@@ -2544,60 +2554,88 @@
     const cardFont = isTripleGlyphCard ? 118 : (isDoubleGlyphCard ? 138 : 160);
     ctx.font = `900 ${cardFont}px "Noto Sans Tamil", sans-serif`;
     ctx.fillStyle = '#10AC84';
-    ctx.fillText(details.combined, 300, 270);
+    ctx.fillText(details.combined, width / 2, 270);
 
     // Formula Banner Box
     ctx.fillStyle = '#FEF9E7';
     ctx.strokeStyle = '#FCD34D';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.roundRect(40, 370, 520, 120, 18);
+    ctx.roundRect(40, 370, width - 80, 120, 18);
     ctx.fill();
     ctx.stroke();
 
     ctx.font = '800 18px "Noto Sans Tamil", sans-serif';
     ctx.fillStyle = '#92400E';
-    ctx.fillText(`சூத்திரம்: ${uyirObj.signName}`, 300, 396);
+    ctx.fillText(`சூத்திரம்: ${uyirObj.signName}`, width / 2, 396);
 
     ctx.font = '600 15px "Noto Sans Tamil", sans-serif';
     ctx.fillStyle = '#78350F';
-    drawWrappedCenteredBlock(ctx, uyirObj.formulaTamil, 300, 426, 480, 22);
+    drawWrappedCenteredBlock(ctx, uyirObj.formulaTamil, width / 2, 426, width - 120, 22);
 
     ctx.font = '500 13px "Outfit", sans-serif';
     ctx.fillStyle = '#92400E';
-    drawWrappedCenteredBlock(ctx, uyirObj.formulaEnglish, 300, 464, 480, 18);
+    drawWrappedCenteredBlock(ctx, uyirObj.formulaEnglish, width / 2, 464, width - 120, 18);
 
     // Example Word Box
     ctx.fillStyle = '#F8FAFC';
     ctx.strokeStyle = '#E2E8F0';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.roundRect(40, 505, 520, 142, 18);
+    ctx.roundRect(40, 505, width - 80, 142, 18);
     ctx.fill();
     ctx.stroke();
 
     ctx.font = '800 24px "Noto Sans Tamil", sans-serif';
     ctx.fillStyle = '#2C3A47';
-    ctx.fillText(`${details.vocab.emoji} ${details.vocab.word}`, 300, 532);
+    ctx.fillText(`${details.vocab.emoji} ${details.vocab.word}`, width / 2, 532);
 
     ctx.font = '600 16px "Outfit", sans-serif';
     ctx.fillStyle = '#5F27CD';
-    ctx.fillText(details.vocab.english, 300, 558);
+    ctx.fillText(details.vocab.english, width / 2, 558);
 
     ctx.font = '600 14px "Noto Sans Tamil", sans-serif';
     ctx.fillStyle = '#4A5568';
-    drawWrappedCenteredBlock(ctx, details.vocab.sentence, 300, 584, 480, 20);
+    drawWrappedCenteredBlock(ctx, details.vocab.sentence, width / 2, 584, width - 120, 20);
 
     ctx.font = '500 13px "Outfit", sans-serif';
     ctx.fillStyle = '#059669';
-    drawWrappedCenteredBlock(ctx, details.vocab.sentenceEnglish || details.vocab.english, 300, 614, 480, 18);
+    drawWrappedCenteredBlock(ctx, details.vocab.sentenceEnglish || details.vocab.english, width / 2, 614, width - 120, 18);
 
     // Footer
     ctx.font = '500 12px "Outfit", sans-serif';
     ctx.fillStyle = '#A0AEC0';
-    ctx.fillText('TamilUyirMei • Made with love for kids', 300, 675);
+    ctx.fillText('TamilUyirMei • Made with love for kids', width / 2, 675);
 
-    // Download PNG reliably with exact filename
+    return card;
+  }
+
+  // Convert canvas directly to binary Uint8Array (PNG format)
+  function canvasToPngBytes(canvas) {
+    const dataUrl = canvas.toDataURL('image/png');
+    const base64 = dataUrl.split(',')[1];
+    const binStr = atob(base64);
+    const len = binStr.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binStr.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  // Pure function to generate PNG binary bytes for any Flashcard
+  function renderFlashcardPngBytes(meiObj, uyirObj, width = 600, height = 700) {
+    const canvas = renderFlashcardCanvas(meiObj, uyirObj, width, height);
+    return canvasToPngBytes(canvas);
+  }
+
+  // Download Flashcard PNG
+  async function downloadFlashcardPng() {
+    const meiObj = MEI_LETTERS[selectedMeiIndex];
+    const uyirObj = UYIR_LETTERS[selectedUyirIndex];
+    const details = getLetterDetails(meiObj, uyirObj);
+
+    const card = renderFlashcardCanvas(meiObj, uyirObj, 600, 700);
     const fileName = `${details.combined}.png`;
     const dataUrl = card.toDataURL('image/png');
     const res = await fetch(dataUrl);
@@ -2637,6 +2675,174 @@
     }
   }
 
+  // Download Current Mei Series Flashcards as ZIP (12 cards)
+  async function downloadMeiCardsZip() {
+    const meiObj = MEI_LETTERS[selectedMeiIndex];
+    const zipName = `${meiObj.mei}_12_flashcards.zip`;
+
+    progressModal.classList.add('open');
+    if (progressSuccessBox) progressSuccessBox.style.display = 'none';
+    if (progressPreviewContainer) progressPreviewContainer.innerHTML = '';
+    progressIcon.textContent = '🗂️';
+    progressTitle.textContent = `${meiObj.mei} வரிசை (12 அட்டைகள்) ZIP தயாராகிறது...`;
+    progressSub.textContent = `${meiObj.mei}/ கோப்புறைக்குள் 12 அட்டைப் படங்களும் (Flashcards) சேர்க்கப்படுகின்றன.`;
+    progressBarInner.style.width = '5%';
+    progressPercent.textContent = '5%';
+
+    await new Promise(r => setTimeout(r, 50));
+
+    const zip = new SimpleZipWriter();
+
+    for (let i = 0; i < UYIR_LETTERS.length; i++) {
+      const uyirObj = UYIR_LETTERS[i];
+      const details = getLetterDetails(meiObj, uyirObj);
+      const pngBytes = renderFlashcardPngBytes(meiObj, uyirObj, 600, 700);
+
+      const filePath = `${meiObj.mei}/${details.combined}.png`;
+      zip.addFile(filePath, pngBytes);
+
+      const pct = Math.round(((i + 1) / UYIR_LETTERS.length) * 92);
+      progressBarInner.style.width = `${pct}%`;
+      progressPercent.textContent = `${pct}% (${details.combined}.png...)`;
+      progressSub.textContent = `சேர்க்கப்படுகிறது: ${meiObj.mei} ➔ ${filePath} (${i + 1}/12)`;
+      await new Promise(r => setTimeout(r, 15));
+    }
+
+    progressBarInner.style.width = '96%';
+    progressPercent.textContent = '96% (ZIP தொகுப்பு)...';
+    await new Promise(r => setTimeout(r, 40));
+
+    const zipBlob = zip.toBlob();
+    const downloadUrl = URL.createObjectURL(zipBlob);
+    activeExportUrls.push(downloadUrl);
+
+    currentExportBlob = zipBlob;
+    currentExportFileName = zipName;
+    currentExportDataUrl = downloadUrl;
+
+    if (window.location.protocol !== 'file:') {
+      triggerFileDownload(zipBlob, zipName);
+    }
+
+    progressBarInner.style.width = '100%';
+    progressPercent.textContent = '100% (நிறைவுற்றது!)';
+
+    progressTitle.textContent = `${zipName} தயார்!`;
+    progressSub.textContent = `${meiObj.mei} கோப்புறைக்குள் 12 அட்டைப் படங்கள் (Flashcards) அடங்கிய ZIP தொகுப்பு உருவாக்கப்பட்டது.`;
+    if (progressPreviewContainer) {
+      progressPreviewContainer.innerHTML = `
+        <div style="padding:16px 24px; background:#F0FDF4; border-radius:14px; border:2px dashed #10AC84; text-align:center;">
+          <div style="font-size:38px;">🗂️</div>
+          <div style="font-weight:800; color:#10AC84; font-size:18px; margin-top:6px;">${meiObj.mei}/ (12 Flashcards PNG)</div>
+        </div>
+      `;
+    }
+    if (progressSuccessMsg) {
+      progressSuccessMsg.textContent = `✅ ${zipName} வெற்றிகரமாக உருவாக்கப்பட்டது!`;
+    }
+    if (btnDirectDownloadLink) {
+      btnDirectDownloadLink.href = downloadUrl;
+      btnDirectDownloadLink.download = zipName;
+    }
+    if (btnDirectDownloadText) {
+      btnDirectDownloadText.textContent = `💾 ${zipName} கணினியில் சேமிக்க (Save ZIP)`;
+    }
+    if (progressSuccessBox) {
+      progressSuccessBox.style.display = 'flex';
+    }
+
+    triggerConfetti();
+  }
+
+  // Download ALL 216 Flashcards organized into 18 Mei folders
+  async function downloadAll216CardsZip() {
+    const zipName = 'TamilUyirMei_All_216_Flashcards.zip';
+
+    progressModal.classList.add('open');
+    if (progressSuccessBox) progressSuccessBox.style.display = 'none';
+    if (progressPreviewContainer) progressPreviewContainer.innerHTML = '';
+    progressIcon.textContent = '🎁';
+    progressTitle.textContent = 'அனைத்து 216 அட்டைப் படங்களும் தயாராகின்றன...';
+    progressSub.textContent = '18 மெய் எழுத்துக் கோப்புறைகளுடன் அனைத்து 216 Flashcard அட்டைப் படங்களும் ZIP-ல் தொகுக்கப்படுகின்றன...';
+    progressBarInner.style.width = '1%';
+    progressPercent.textContent = '1%';
+
+    await new Promise(r => setTimeout(r, 60));
+
+    const zip = new SimpleZipWriter();
+    const totalLetters = MEI_LETTERS.length * UYIR_LETTERS.length; // 216
+    let count = 0;
+
+    for (let m = 0; m < MEI_LETTERS.length; m++) {
+      const mObj = MEI_LETTERS[m];
+      for (let u = 0; u < UYIR_LETTERS.length; u++) {
+        const uObj = UYIR_LETTERS[u];
+        const details = getLetterDetails(mObj, uObj);
+        const pngBytes = renderFlashcardPngBytes(mObj, uObj, 600, 700);
+
+        const filePath = `${mObj.mei}/${details.combined}.png`;
+        zip.addFile(filePath, pngBytes);
+
+        count++;
+        const pct = Math.round((count / totalLetters) * 94);
+        progressBarInner.style.width = `${pct}%`;
+        progressPercent.textContent = `${pct}% (${count}/${totalLetters})`;
+        progressSub.textContent = `சேர்க்கப்படுகிறது: ${mObj.mei} ➔ ${filePath} (${count}/${totalLetters})`;
+
+        // Yield to browser UI thread periodically
+        if (count % 4 === 0) {
+          await new Promise(r => setTimeout(r, 10));
+        }
+      }
+    }
+
+    progressBarInner.style.width = '96%';
+    progressPercent.textContent = '96% (ZIP உருவாக்கப்படுகிறது)...';
+    progressSub.textContent = 'அனைத்து 216 அட்டைப் படங்களும் சுருக்கப்பட்டு ZIP கோப்பாக மாற்றப்படுகிறது...';
+    await new Promise(r => setTimeout(r, 60));
+
+    const zipBlob = zip.toBlob();
+    const downloadUrl = URL.createObjectURL(zipBlob);
+    activeExportUrls.push(downloadUrl);
+
+    currentExportBlob = zipBlob;
+    currentExportFileName = zipName;
+    currentExportDataUrl = downloadUrl;
+
+    if (window.location.protocol !== 'file:') {
+      triggerFileDownload(zipBlob, zipName);
+    }
+
+    progressBarInner.style.width = '100%';
+    progressPercent.textContent = '100% (முழுமை பெற்றது!)';
+
+    progressTitle.textContent = `${zipName} தயார்!`;
+    progressSub.textContent = `18 மெய் கோப்புறைகளில் 216 உயிர்மெய் அட்டைப் படங்களும் (Flashcards) வெற்றிகரமாகத் தொகுக்கப்பட்டன.`;
+    if (progressPreviewContainer) {
+      progressPreviewContainer.innerHTML = `
+        <div style="padding:16px 24px; background:#F0FDF4; border-radius:14px; border:2px dashed #10AC84; text-align:center;">
+          <div style="font-size:42px;">🎁</div>
+          <div style="font-weight:800; color:#10AC84; font-size:18px; margin-top:6px;">18 மெய் கோப்புறைகள் • 216 Flashcard PNG</div>
+        </div>
+      `;
+    }
+    if (progressSuccessMsg) {
+      progressSuccessMsg.textContent = `✅ ${zipName} (${(zipBlob.size / (1024 * 1024)).toFixed(1)} MB) தயார்!`;
+    }
+    if (btnDirectDownloadLink) {
+      btnDirectDownloadLink.href = downloadUrl;
+      btnDirectDownloadLink.download = zipName;
+    }
+    if (btnDirectDownloadText) {
+      btnDirectDownloadText.textContent = `💾 ${zipName} கணினியில் சேமிக்க (Save ZIP)`;
+    }
+    if (progressSuccessBox) {
+      progressSuccessBox.style.display = 'flex';
+    }
+
+    triggerConfetti();
+  }
+
   // Handle Resize
   function resizeCanvases() {
     const animWrapper = document.getElementById('animViewWrapper');
@@ -2661,9 +2867,13 @@
   // Expose for external API / testing
   window.TamilUyirMei = window.Sangamam = {
     renderLetterGifBytes,
+    renderFlashcardPngBytes,
     downloadSingleLetterGif,
     downloadMeiSeriesZip,
     downloadAll216UyirmeiZip,
+    downloadFlashcardPng,
+    downloadMeiCardsZip,
+    downloadAll216CardsZip,
     downloadLetterVideo,
     downloadFourStepCardPng,
     MEI_LETTERS,
