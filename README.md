@@ -1,7 +1,10 @@
 # தமிழ் உயிர்மெய் பயிலரங்கம் • TamilUyirMei
 ### Animated Tamil Uyir-Mei Learning Lab for Kids
 
+🌐 **Live Web App**: [https://krksranjeeth-coder.github.io/TamilUyirMei/](https://krksranjeeth-coder.github.io/TamilUyirMei/)
+
 An interactive, animated educational web application designed for Tamil school children and diaspora learners worldwide to master the 216 **Uyir-Mei (உயிர்மெய்)** letters with visual shape families, stroke-by-stroke writing guides, finger/mouse tracing canvas, child-friendly English explanations, pause-and-learn video, and animated GIF exports.
+
 
 ---
 
